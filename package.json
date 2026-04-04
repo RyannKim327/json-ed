@@ -1,0 +1,32 @@
+{
+  "name": "json-ed",
+  "version": "0.0.1",
+  "description": "A ORM-Based program for making JSON a relational-like database",
+  "keywords": [
+    "orm",
+    "json-orm"
+  ],
+  "homepage": "https://github.com/RyannKim327/json-ed#readme",
+  "bugs": {
+    "url": "https://github.com/RyannKim327/json-ed/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RyannKim327/json-ed.git"
+  },
+  "license": "ISC",
+  "author": "RyannKim327",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "tsx test"
+  },
+  "dependencies": {
+    "json-enc-dec": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.2"
+  }
+}
