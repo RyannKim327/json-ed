@@ -4,11 +4,13 @@
  */
 
 import { data_structure, json_data, main_structure } from "../interface";
-import { save } from "../middlewares/data_control";
+import { read, save } from "../middlewares/data_control";
 
-export default function insert_data(filename: string, key: string, currentData: main_structure) {
+export default function insert_data(filename: string, key: string) {
+	const main_data = read(filename, key)
+
 	const idGenerator = () => {
-		const limit = 11
+		const limit = 12
 		const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 		let code = ""
 		for (let i = 0; i < limit; i++) {
@@ -20,25 +22,45 @@ export default function insert_data(filename: string, key: string, currentData: 
 	}
 
 	return (table: string, data: data_structure, incremental?: boolean) => {
-		let toTable: json_data = currentData[table]
-		let id: string | number = 1
-		if (!toTable) {
-			toTable = {}
+		if (incremental === undefined) {
+			incremental = true
 		}
 
+		let id: string | number = 1
+		if (main_data[table] === undefined) {
+			main_data[table] = {}
+		}
+
+		console.log(main_data)
+
 		// TODO: For ID auto generator
-		if (incremental && toTable) {
-			const keys = Object.keys(toTable)
-			id = keys[keys.length - 1] + 1
-		} else {
-			const keys = Object.keys(toTable)
+		const keys = Object.keys(main_data[table])
+		if (incremental && keys.length > 0) {
+			const keys = Object.keys(main_data[table])
+			id = keys[keys.length - 1]
+			if (typeof (id) === "number") {
+				id++
+			} else {
+				try {
+					id = parseInt(id)
+					id++
+				} catch (e) {
+					throw new Error("ID can't be parse to numbers")
+				}
+			}
+		} else if (!incremental && main_data[table] !== undefined) {
+			const keys = Object.keys(main_data[table])
 			id = idGenerator()
 			while (keys.includes(id)) {
 				id = idGenerator()
 			}
+		} else if (!incremental) {
+			id = idGenerator()
 		}
 
-		toTable[id] = data
-		save(filename, key, currentData)
+		main_data[table][id] = data
+		console.log(main_data)
+		save(filename, key, main_data)
+		return main_data
 	}
 }
