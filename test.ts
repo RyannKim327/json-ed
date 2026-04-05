@@ -1,7 +1,5 @@
-import { JsonED } from "./src";
+import JsonED from "./src";
 
 const d = JsonED("hello")
-d.insert("users", {
-	"user": "user hahaha"
-})
+d.insert("users", "username = user, password123 = pass,age=10,active=true,hahaha==sfsdfs==asdasd,safsd=")
 console.log(d.read("users", 1))
