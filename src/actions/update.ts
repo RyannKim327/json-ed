@@ -21,6 +21,10 @@ export default function update_data(filename: string, key: string, cache: main_s
 			data = stringToJson(data)
 		}
 
+		if (cache[table][id] === undefined) {
+			throw new Error(`Data with id: ${id} is undefined`)
+		}
+
 		const keys = Object.keys(data)
 
 		keys.forEach(key => {

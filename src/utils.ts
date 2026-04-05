@@ -12,6 +12,21 @@ export function idGenerator() {
 	return code
 }
 
+export function parseValue(raw: string): string | number | boolean | undefined | null {
+	const value = raw.trim();
+	if (value === undefined) return undefined
+	if (value === null) return null
+	if (value === "") return ""
+
+	if (value === "true") return true;
+	if (value === "false") return false;
+
+	const num = Number(value);
+	if (!isNaN(num)) return num;
+
+	return raw;
+}
+
 export function stringToJson(data: string) {
 	const pattern = /([\s\w]+)\s*=\s*(?:'([^']*)'|"([^"]*)"|([^,]*))/gi
 	const temp: data_structure = {}
@@ -24,21 +39,4 @@ export function stringToJson(data: string) {
 	}
 
 	return temp
-}
-
-export function parseValue(raw: string): string | number | boolean | undefined | null {
-	const value = raw.trim();
-
-	if (value === "true") return true;
-	if (value === "false") return false;
-
-	if (value === "") return ""
-	if (value === undefined) return undefined
-	if (value === null) return null
-
-	const num = Number(value);
-	if (!isNaN(num)) return num;
-
-	// fallback string
-	return value;
 }
