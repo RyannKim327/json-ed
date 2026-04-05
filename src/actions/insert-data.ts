@@ -42,19 +42,19 @@ export default function insert_data(filename: string, key: string, cache: main_s
 
 	return (table: string, data: string | data_structure, incremental?: boolean) => {
 		if (typeof (data) === "string") {
-			const d = data.split(",")
+			const pattern = /(\w+)\s*=\s*(?:'([^']*)'|"([^"]*)"|([^,]*))/gi
 			const temp: data_structure = {}
-			d.forEach((_d) => {
-				const pair = _d.split("=")
-				if (pair.length > 1) {
-					const key: string = pair[0].trim().replace(/\s/gi, "_")
-					pair.shift()
-					const value: string = pair.join("=").trimStart().trimEnd()
-					temp[`${key}`] = parseValue(value ?? "")
-				}
-			})
+			let match;
+
+			while ((match = pattern.exec(data)) !== null) {
+				const key = match[1].trim();
+				const valueRaw = match[2] ?? match[3] ?? match[4];
+				temp[key] = parseValue(valueRaw);
+			}
 			data = temp
 		}
+		console.log(data)
+		return {}
 
 		if (incremental === undefined) {
 			incremental = true
