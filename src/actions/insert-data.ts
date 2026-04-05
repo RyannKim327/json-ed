@@ -23,14 +23,16 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		return code
 	}
 
-	function parseValue(raw: string): string | number | boolean {
+	function parseValue(raw: string): string | number | boolean | undefined | null {
 		const value = raw.trim();
 
-		// boolean check
 		if (value === "true") return true;
 		if (value === "false") return false;
 
-		// number check
+		if (value === "") return ""
+		if (value === undefined) return undefined
+		if (value === null) return null
+
 		const num = Number(value);
 		if (!isNaN(num)) return num;
 
@@ -48,11 +50,12 @@ export default function insert_data(filename: string, key: string, cache: main_s
 					const key: string = pair[0].trim().replace(/\s/gi, "_")
 					pair.shift()
 					const value: string = pair.join("=").trimStart().trimEnd()
-					temp[`${key}`] = parseValue(value)
+					temp[`${key}`] = parseValue(value ?? "")
 				}
 			})
 			data = temp
 		}
+
 		if (incremental === undefined) {
 			incremental = true
 		}
