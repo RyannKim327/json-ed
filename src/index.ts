@@ -6,9 +6,10 @@
 
 
 import generateJSON from "./middlewares/generate";
-import insert_data from "./actions/insert-data";
-import read_data from "./actions/read-data";
+import insert_data from "./actions/insert";
+import read_data from "./actions/read";
 import { main_structure } from "./interface";
+import update_data from "./actions/update";
 
 export default function JsonED(filename?: string, key?: string) {
 
@@ -43,9 +44,11 @@ export default function JsonED(filename?: string, key?: string) {
 	// INFO: The return functions or public functions
 	const insert = insert_data(filename, key, cache)
 	const read = read_data(filename, key, cache)
+	const update = update_data(filename, key, cache)
 
 	return {
+		insert,
 		read,
-		insert
+		update
 	}
 }
