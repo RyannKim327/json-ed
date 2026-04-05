@@ -31,8 +31,6 @@ export default function insert_data(filename: string, key: string) {
 			main_data[table] = {}
 		}
 
-		console.log(main_data)
-
 		// TODO: For ID auto generator
 		const keys = Object.keys(main_data[table])
 		if (incremental && keys.length > 0) {
@@ -59,7 +57,6 @@ export default function insert_data(filename: string, key: string) {
 		}
 
 		main_data[table][id] = data
-		console.log(main_data)
 		save(filename, key, main_data)
 		return main_data
 	}

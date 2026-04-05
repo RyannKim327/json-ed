@@ -26,17 +26,20 @@ export function JsonED(filename?: string, key?: string) {
 	}
 
 	// TODO: To filter the filename to prevent multi dots
-	// const fileSplit: string[] = filename.split(".")
-	// fileSplit.pop()
-	// const actualFile: string[] = fileSplit.join("").split("/")
-	// actualFile[actualFile.length - 1] = actualFile[actualFile.length - 1].replace(/\W/gi, "")
-	// filename = actualFile.join("/")
+	const actualFile = filename.split("/");
+	const lastPart = actualFile[actualFile.length - 1];
+	const nameOnly = lastPart.split(".")[0];
+	actualFile.push(nameOnly);
+	filename = actualFile[actualFile.length - 1];
 
 	if (!filename.endsWith(".dat")) {
 		filename += ".dat"
 	}
 
-	const data = generateJSON(filename, key)
+	// TODO: To generate the file first
+	generateJSON(filename, key)
+
+	// INFO: The return functions or public functions
 	const insert = insert_data(filename, key)
 	const read = read_data(filename, key)
 
