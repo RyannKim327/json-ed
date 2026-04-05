@@ -23,7 +23,33 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		return code
 	}
 
-	return (table: string, data: data_structure, incremental?: boolean) => {
+	function parseValue(raw: string): string | number | boolean {
+		const value = raw.trim();
+
+		// boolean check
+		if (value === "true") return true;
+		if (value === "false") return false;
+
+		// number check
+		const num = Number(value);
+		if (!isNaN(num)) return num;
+
+		// fallback string
+		return value;
+	}
+
+	return (table: string, data: string | data_structure, incremental?: boolean) => {
+		if (typeof (data) === "string") {
+			const d = data.split(",")
+			const temp: data_structure = {}
+			d.forEach((_d) => {
+				const pair = _d.split("=")
+				const key: string = pair[0].trim().replace(/\s/gi, "_")
+				const value: string = pair[1].trimStart().trimEnd()
+				temp[`${key}`] = parseValue(value)
+			})
+			data = temp
+		}
 		if (incremental === undefined) {
 			incremental = true
 		}
