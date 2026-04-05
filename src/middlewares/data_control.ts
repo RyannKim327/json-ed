@@ -1,4 +1,4 @@
-import { data_structure, json_data, main_structure } from "../interface";
+import { main_structure } from "../interface";
 import * as jsed from "json-enc-dec"
 
 export function save(filename: string, key: string, data: main_structure) {
@@ -6,4 +6,8 @@ export function save(filename: string, key: string, data: main_structure) {
 		saveTo: filename,
 		returnBuffer: false
 	})
+}
+
+export function read(filename: string, key: string) {
+	return jsed.decrypt(filename, key)
 }

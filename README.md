@@ -4,11 +4,14 @@
 
 **JsonED** is a TypeScript-based ORM-like library designed to manage JSON data as a relational-like database with built-in encryption. It simplifies data persistence by providing a structured way to handle tables, rows, and automatic ID generation while keeping your data secure.
 
+## Note
+> I don't recommend to use this for a large-scale projects, just use this for small projects and hobbies. This is just created for fun, and to expand my ideas and knowledge.
+
 ## Features
 
 - **Relational Structure:** Organize your JSON data into tables and records.
 - **Built-in Encryption:** Uses `json-enc-dec` to keep your database files secure.
-- **Auto ID Generation:** Support for both random 11-character strings and incremental numeric IDs.
+- **Auto ID Generation:** Support for both random 12-character strings and incremental numeric IDs.
 - **TypeScript Support:** Fully typed for a better developer experience.
 - **Simple API:** Easy to initialize and perform basic operations.
 
