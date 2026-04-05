@@ -28,9 +28,7 @@ export default function update_data(filename: string, key: string, cache: main_s
 		const keys = Object.keys(data)
 
 		keys.forEach(key => {
-			if (data[key] && key) {
-				cache[table][id][key] = data[key]
-			}
+			cache[table][id][key] = data[key]
 		})
 
 		save(filename, key, cache)
