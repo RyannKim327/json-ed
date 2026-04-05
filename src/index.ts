@@ -10,7 +10,7 @@ import insert_data from "./actions/insert-data";
 import read_data from "./actions/read-data";
 import { main_structure } from "./interface";
 
-export function JsonED(filename?: string, key?: string) {
+export default function JsonED(filename?: string, key?: string) {
 
 	// TODO: To create a generalized key if ever that it is not existed
 	if (key === undefined) {

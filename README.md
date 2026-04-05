@@ -21,24 +21,60 @@
 npm install json-ed
 ```
 
-## Usage
+## How To
+
+### 1. Initialization
+Import `JsonED` and initialize your database. If the file doesn't exist, it will be automatically created with an encrypted empty structure.
 
 ```typescript
-import { JsonED } from 'json-ed';
+import JsonED from 'json-ed';
 
-// Initialize the database (filename defaults to "data.dat", key defaults to a fallback)
+/**
+ * @param filename - Optional: Name of the database file (defaults to "data")
+ * @param key - Optional: Secret key for encryption (defaults to "random text from the internet")
+ */
 const db = JsonED('my-database', 'my-secret-key');
+```
 
-// Insert data into a table
-// insert(table: string, data: data_structure, incremental?: boolean)
+> **Note:** The filename will automatically append `.dat` if not provided.
+
+### 2. Inserting Data
+You can insert data using either a structured object or a comma-separated string format.
+
+#### Using Objects
+```typescript
+// insert(table: string, data: object, incremental?: boolean)
 db.insert('users', {
     username: 'ryannkim',
     role: 'developer',
     active: true
 });
+```
 
-// To use incremental IDs (1, 2, 3...)
-db.insert('logs', { event: 'login' }, true);
+#### Using String Format
+```typescript
+db.insert('users', 'username = user1, role = guest, active = false');
+```
+
+#### ID Generation Strategies
+- **Incremental IDs (Default):** Set `incremental` to `true` (or leave it out) to use numeric IDs (1, 2, 3...).
+- **Random IDs:** Set `incremental` to `false` to use random 12-character alphanumeric strings.
+
+```typescript
+// Generates incremental ID: 1, 2, 3...
+db.insert('logs', { event: 'startup' }, true);
+
+// Generates random ID: "aB3cDe4fGh5i"
+db.insert('sessions', { token: 'xyz123' }, false);
+```
+
+### 3. Reading Data
+Retrieve a specific record by its table and ID.
+
+```typescript
+// read(table: string, id: string | number)
+const user = db.read('users', 1);
+console.log(user);
 ```
 
 ## Data Structure
@@ -72,6 +108,10 @@ type main_structure = Record<string, json_data>
    - Appends the data.
    - Re-encrypts and saves the file automatically.
 3. **Encryption:** All data is stored in an encrypted format using your provided key, making it unreadable without the proper credentials.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE.md).
 
 ## Author
 

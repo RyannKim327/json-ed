@@ -14,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/RyannKim327/json-ed.git"
   },
-  "license": "ISC",
+  "license": "MIT",
   "author": "RyannKim327",
   "type": "commonjs",
   "main": "dist/index.js",
