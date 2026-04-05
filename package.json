@@ -22,7 +22,7 @@
     "test": "tsx test"
   },
   "dependencies": {
-    "json-enc-dec": "^0.1.0"
+    "json-enc-dec": "^0.1.2"
   },
   "devDependencies": {
     "@types/node": "^25.5.2",
