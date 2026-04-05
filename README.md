@@ -1,4 +1,6 @@
 # JsonED (JSON Encrypted Database)
+### MPOP Reverse II [Ryann Kim M. Sesgundo]
+
 
 [![wakatime](https://wakatime.com/badge/user/61954829-dd88-47de-8b67-7d673663ea1c/project/60a5ecd1-86d9-48f9-9ce9-abadb9470de2.svg)](https://wakatime.com/badge/user/61954829-dd88-47de-8b67-7d673663ea1c/project/60a5ecd1-86d9-48f9-9ce9-abadb9470de2)
 
@@ -39,9 +41,11 @@ const db = JsonED('my-database', 'my-secret-key');
 > **Note:** The filename will automatically append `.dat` if not provided.
 
 ### 2. Inserting Data
-You can insert data using either a structured object or a comma-separated string format.
+You can insert data into your tables by providing either a JSON object or a formatted string.
 
-#### Using Objects
+#### Using JSON (Object)
+This method is recommended for more structured data or when handling nested structures (though keep in mind that the storage is primarily flat key-value pairs per ID).
+
 ```typescript
 // insert(table: string, data: object, incremental?: boolean)
 db.insert('users', {
@@ -52,9 +56,18 @@ db.insert('users', {
 ```
 
 #### Using String Format
+You can also insert data using a comma-separated string format. This supports various data types and allows for quoted strings if the value contains commas.
+
 ```typescript
-db.insert('users', 'username = user1, role = guest, active = false');
+// Format: key = value, key2 = value2
+db.insert('users', "username = user, age = 10, active = true, bio = 'software engineer, hobbyist'");
 ```
+
+**String Format Rules:**
+- **Key-Value Pairs:** Each pair should follow the `key = value` pattern.
+- **Data Types:** Automatically parses `true`/`false` as booleans and numeric strings as numbers.
+- **Quotes:** Use single (`'`) or double (`"`) quotes for values that contain commas or special characters.
+- **Separators:** Use commas (`,`) to separate different fields.
 
 #### ID Generation Strategies
 - **Incremental IDs (Default):** Set `incremental` to `true` (or leave it out) to use numeric IDs (1, 2, 3...).
@@ -112,8 +125,3 @@ type main_structure = Record<string, json_data>
 ## License
 
 This project is licensed under the [MIT License](LICENSE.md).
-
-## Author
-
-**Ryann Kim M. Sesgundo**
-
