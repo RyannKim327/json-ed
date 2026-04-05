@@ -42,12 +42,12 @@ export default function insert_data(filename: string, key: string, cache: main_s
 
 	return (table: string, data: string | data_structure, incremental?: boolean) => {
 		if (typeof (data) === "string") {
-			const pattern = /(\w+)\s*=\s*(?:'([^']*)'|"([^"]*)"|([^,]*))/gi
+			const pattern = /([\s\w]+)\s*=\s*(?:'([^']*)'|"([^"]*)"|([^,]*))/gi
 			const temp: data_structure = {}
 			let match;
 
 			while ((match = pattern.exec(data)) !== null) {
-				const key = match[1].trim();
+				const key = match[1].replace(/\s/gi, "").trim();
 				const valueRaw = match[2] ?? match[3] ?? match[4];
 				temp[key] = parseValue(valueRaw);
 			}
