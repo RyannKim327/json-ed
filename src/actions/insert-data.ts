@@ -44,9 +44,12 @@ export default function insert_data(filename: string, key: string, cache: main_s
 			const temp: data_structure = {}
 			d.forEach((_d) => {
 				const pair = _d.split("=")
-				const key: string = pair[0].trim().replace(/\s/gi, "_")
-				const value: string = pair[1].trimStart().trimEnd()
-				temp[`${key}`] = parseValue(value)
+				if (pair.length > 1) {
+					const key: string = pair[0].trim().replace(/\s/gi, "_")
+					pair.shift()
+					const value: string = pair.join("=").trimStart().trimEnd()
+					temp[`${key}`] = parseValue(value)
+				}
 			})
 			data = temp
 		}
