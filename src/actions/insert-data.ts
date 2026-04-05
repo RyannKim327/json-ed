@@ -53,8 +53,10 @@ export default function insert_data(filename: string, key: string, cache: main_s
 			}
 			data = temp
 		}
-		console.log(data)
-		return {}
+
+		// TODO: For string testing
+		// console.log(data)
+		// return {}
 
 		if (incremental === undefined) {
 			incremental = true
