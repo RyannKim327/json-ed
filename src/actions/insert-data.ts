@@ -6,8 +6,10 @@
 import { data_structure, json_data, main_structure } from "../interface";
 import { read, save } from "../middlewares/data_control";
 
-export default function insert_data(filename: string, key: string) {
-	const main_data = read(filename, key)
+export default function insert_data(filename: string, key: string, cache: main_structure) {
+	if (Object.keys(cache).length === 0) {
+		cache = read(filename, key)
+	}
 
 	const idGenerator = () => {
 		const limit = 12
@@ -27,14 +29,14 @@ export default function insert_data(filename: string, key: string) {
 		}
 
 		let id: string | number = 1
-		if (main_data[table] === undefined) {
-			main_data[table] = {}
+		if (cache[table] === undefined) {
+			cache[table] = {}
 		}
 
 		// TODO: For ID auto generator
-		const keys = Object.keys(main_data[table])
+		const keys = Object.keys(cache[table])
 		if (incremental && keys.length > 0) {
-			const keys = Object.keys(main_data[table])
+			const keys = Object.keys(cache[table])
 			id = keys[keys.length - 1]
 			if (typeof (id) === "number") {
 				id++
@@ -46,8 +48,8 @@ export default function insert_data(filename: string, key: string) {
 					throw new Error("ID can't be parse to numbers")
 				}
 			}
-		} else if (!incremental && main_data[table] !== undefined) {
-			const keys = Object.keys(main_data[table])
+		} else if (!incremental && cache[table] !== undefined) {
+			const keys = Object.keys(cache[table])
 			id = idGenerator()
 			while (keys.includes(id)) {
 				id = idGenerator()
@@ -56,8 +58,9 @@ export default function insert_data(filename: string, key: string) {
 			id = idGenerator()
 		}
 
-		main_data[table][id] = data
-		save(filename, key, main_data)
-		return main_data
+		cache[table][id] = data
+		save(filename, key, cache)
+		return cache
 	}
+
 }

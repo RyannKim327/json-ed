@@ -3,14 +3,18 @@
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */
 
+import { main_structure } from "../interface";
 import { read } from "../middlewares/data_control";
 
-export default function read_data(filename: string, key: string) {
-	const main_data = read(filename, key)
+export default function read_data(filename: string, key: string, cache: main_structure) {
+	if (Object.keys(cache).length === 0) {
+		cache = read(filename, key)
+	}
+
 	return (table: string, id: string | number) => {
-		if (main_data[table] === undefined) {
+		if (cache[table] === undefined) {
 			throw new Error("No Table Found")
 		}
-		return main_data[table][id]
+		return cache[table][id]
 	}
 }

@@ -8,6 +8,7 @@
 import generateJSON from "./middlewares/generate";
 import insert_data from "./actions/insert-data";
 import read_data from "./actions/read-data";
+import { main_structure } from "./interface";
 
 export function JsonED(filename?: string, key?: string) {
 
@@ -37,11 +38,11 @@ export function JsonED(filename?: string, key?: string) {
 	}
 
 	// TODO: To generate the file first
-	generateJSON(filename, key)
+	let cache: main_structure = generateJSON(filename, key)
 
 	// INFO: The return functions or public functions
-	const insert = insert_data(filename, key)
-	const read = read_data(filename, key)
+	const insert = insert_data(filename, key, cache)
+	const read = read_data(filename, key, cache)
 
 	return {
 		read,
