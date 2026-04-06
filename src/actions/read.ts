@@ -12,6 +12,13 @@ export default function read_data(filename: string, key: string, cache: main_str
 	}
 
 	return (table: string, id: string | number) => {
+		table = table.toLowerCase()
+
+		// TODO: To prevent reserved table to access
+		if (table === "table_struct") {
+			throw new Error("Cannot access reserved table: table_struct");
+		}
+
 		if (cache[table] === undefined) {
 			throw new Error("The table is not found")
 		}

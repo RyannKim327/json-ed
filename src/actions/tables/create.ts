@@ -8,6 +8,13 @@ import { read } from "../../middlewares/data_control";
 
 export default function createTable(filename: string, key: string, cache: main_structure) {
 	return (table: string, columns: string[]) => {
+		table = table.toLowerCase()
+
+		// TODO: Anti destroy reserve table
+		if (table === "table_struct") {
+			throw new Error("Cannot access reserved table: table_struct");
+		}
+
 		if (Object.keys(cache).length === 0) {
 			Object.assign(cache, read(filename, key))
 		}

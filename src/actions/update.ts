@@ -5,7 +5,7 @@
 
 import { data_structure, main_structure } from "../interface";
 import { read, save } from "../middlewares/data_control";
-import { stringToJson } from "../utils";
+import { stringToJson, toLowerCaseKeys } from "../utils";
 
 export default function update_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -13,6 +13,13 @@ export default function update_data(filename: string, key: string, cache: main_s
 	}
 
 	return (table: string, id: string | number, data: string | data_structure) => {
+		table = table.toLowerCase()
+
+		// TODO: To prevent reserved table to access
+		if (table === "table_struct") {
+			throw new Error("Cannot access reserved table: table_struct");
+		}
+
 		if (cache[table] === undefined) {
 			throw new Error("No Table Found")
 		}
@@ -26,9 +33,10 @@ export default function update_data(filename: string, key: string, cache: main_s
 		}
 
 		const keys = Object.keys(data)
+		data = toLowerCaseKeys(data)
 
-		keys.forEach(key => {
-			cache[table][id][key] = data[key]
+		keys.forEach((key: string) => {
+			cache[table][id][key.toLowerCase()] = data[key.toLowerCase()]
 		})
 
 		save(filename, key, cache)

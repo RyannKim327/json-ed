@@ -16,6 +16,12 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		let incremental = true
 		let limit = 12
 
+		table = table.toLowerCase()
+		// TODO: To prevent reserved table to access
+		if (table === "table_struct") {
+			throw new Error("Cannot access reserved table: table_struct");
+		}
+
 		// TODO: To question the existence of table
 		// This error must create a table first for the list of columns
 		// It is very important to create first rather than automatically create
