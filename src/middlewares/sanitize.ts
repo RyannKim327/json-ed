@@ -1,22 +1,22 @@
 import { data_structure, main_structure } from "../interface";
 
 export default function sanitizingData(table: string, data: data_structure, cache: main_structure) {
-	const allowedColumns = cache[`tbl_struct_${table}`]
+	const allowedColumns = cache["table_struct"][table]
 
 	// TODO: Key filteration
 	if (
 		!Array.isArray(allowedColumns) ||
-		!allowedColumns.every(col => typeof col === "string")
+		!Object.keys(data).every(col => typeof allowedColumns.includes(col.toLowerCase()))
 	) {
 		return {
 			"error": "Invalid keys"
 		};
 	}
 
-	const temp = data
+	const temp: data_structure = data
 	data = {}
 	allowedColumns.forEach((column: string) => {
-		data[column] = temp[column] ?? null
+		data[column.toLowerCase()] = temp[column.toLowerCase()] ?? null
 	})
 
 	return data
