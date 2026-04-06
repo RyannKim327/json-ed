@@ -1,3 +1,7 @@
+/* NOTE: The main role of this file is to manage the file if it is not yet
+ * generated, it is to prevent the error to crud and other actions to the project
+ */
+
 import * as fs from "fs"
 import { read, save } from "./data_control"
 

@@ -40,65 +40,84 @@ npm install json-ed
 ## How To
 
 ### 1. Initialization
-Import `JsonED` and initialize your database. If the file doesn't exist, it will be automatically created with an encrypted structure.
+#### `JsonED(key: string, filename?: string)`
+To get started, you need to initialize **JsonED** with a secret encryption key. If the database file does not exist, it will be created automatically.
+
+**Option A: Providing a Custom Filename**
+You can specify a name for your database. The `.dat` extension will be added automatically if you don't provide it.
 
 ```typescript
 import JsonED from 'json-ed';
 
-/**
- * @param key - Required: Secret key for encryption (must be kept safe!)
- * @param filename - Optional: Name of the database file (defaults to "data")
- */
-const db = JsonED('my-secret-key', 'my-database');
+// This creates/loads 'my-database.dat'
+const db = JsonED('your-secret-key', 'my-database');
 ```
 
-> **Note:** The filename will automatically append `.dat` if not provided.
-
-### 2. Creating Tables (Optional)
-While `JsonED` automatically creates tables when you first insert data, you can explicitly create a table to define its structure.
+**Option B: Using the Default Filename (Optional)**
+If you omit the second parameter, the database will default to `data.dat`.
 
 ```typescript
-// create(table: string, columns: string[])
+import JsonED from 'json-ed';
+
+// This creates/loads 'data.dat'
+const db = JsonED('your-secret-key');
+```
+
+> **Warning:** The encryption key is the only way to access your data. If you lose the key or use a different one later, you will not be able to read the existing database. Always store your keys in environment variables!
+
+### 2. Creating Tables (Required)
+#### `db.create(tableName: string, columns: string[])`
+You **must** create a table before you can insert any data. This defines the structure and prevents unauthorized table access.
+
+```typescript
+// Example: db.create('users', ['username', 'email', 'role', 'active'])
 db.create('users', ['username', 'email', 'role', 'active']);
 ```
 
 ### 3. Inserting Data
-You can insert data into your tables by providing either a JSON object or a formatted string. If the table doesn't exist, it will return to an error.
+#### `db.insert(tableName: string, data: object | string, options?: insertOptions)`
+You can insert data into your tables by providing either a JSON object or a formatted string. 
 
-#### Using JSON (Object)
-This method is recommended for structured data.
+#### Using JSON Object (Recommended)
+This method is recommended for structured data and better type safety.
 
 ```typescript
-// insert(table: string, data: object, opts?: insertOptions)
-db.insert('users', {
+// Example: db.insert('users', { username: 'ryannkim', active: true })
+const result = db.insert('users', {
     username: 'ryannkim',
     role: 'developer',
     active: true
 });
+
+if (result.error) {
+    console.error('Failed to insert:', result.error);
+} else {
+    console.log('Inserted record:', result);
+}
 ```
 
 #### Using String Format
-You can also insert data using a simple `key = value` string format.
+A convenient shorthand for simple data entry.
 
 ```typescript
-// Format: key = value, key2 = value2
-db.insert('users', "username = user, age = 10, active = true, bio = 'software engineer, hobbyist'");
+// Example: db.insert('users', "username = mpop, role = admin")
+db.insert('users', "username = mpop, role = admin, active = true");
 ```
 
 **String Format Rules:**
-- **Key-Value Pairs:** Each pair follows the `key = value` pattern.
-- **Data Types:** Automatically parses `true`/`false` as booleans and numeric strings as numbers.
-- **Quotes:** Use single (`'`) or double (`"`) quotes for values that contain commas or special characters.
-- **Separators:** Use commas (`,`) to separate different fields.
+- **Pairs:** Use `key = value` format.
+- **Types:** Numbers and booleans (`true`/`false`) are automatically parsed.
+- **Quotes:** Wrap values in `'` or `"` if they contain commas or special characters.
+- **Separators:** Separate fields with a comma (`,`).
 
 #### ID Generation Strategies
-By default, IDs are incremental (1, 2, 3...). You can customize this using the `opts` parameter.
+Control how IDs are generated via the `options` parameter.
 
 ```typescript
 // Incremental ID: 1, 2, 3... (Default)
 db.insert('logs', { event: 'startup' }, { increment: true });
 
-// Random 12-character alphanumeric ID: "aB3cDe4fGh5i"
+// Random 12-character alphanumeric ID
 db.insert('sessions', { token: 'xyz123' }, { increment: false });
 
 // Random ID with custom length (minimum 6)
@@ -106,24 +125,26 @@ db.insert('tokens', { value: 'abc' }, { increment: false, idLength: 16 });
 ```
 
 ### 4. Reading Data
-Retrieve a specific record by its table and ID.
+#### `db.read(tableName: string, id: string | number)`
+Retrieve a specific record by its ID.
 
 ```typescript
-// read(table: string, id: string | number)
+// Example: db.read('users', 1)
 const user = db.read('users', 1);
 
 if (user.error) {
-    console.error(user.error);
+    console.error('Record not found:', user.error);
 } else {
-    console.log(user);
+    console.log('User data:', user);
 }
 ```
 
 ### 5. Updating Data
-Modify an existing record. You can provide the new data as an object or a string format. This will merge the new data with the existing record.
+#### `db.update(tableName: string, id: string | number, data: object | string)`
+Modify an existing record. New data is merged with the existing record.
 
 ```typescript
-// update(table: string, id: string | number, data: object | string)
+// Example: db.update('users', 1, { active: false })
 db.update('users', 1, { active: false });
 
 // Using string format
@@ -131,25 +152,26 @@ db.update('users', 1, "role = administrator, active = true");
 ```
 
 ### 6. Deleting Data
+#### `db.remove(tableName: string, id: string | number)`
 Remove a specific record from a table.
 
 ```typescript
-// remove(table: string, id: string | number)
-db.remove('users', 1);
+// Example: db.remove('users', 1)
+const status = db.remove('users', 1);
 ```
 
 ## Data Structure
 
 The internal structure of the database follows a hierarchical JSON format:
 
-```typescript
+```json
 {
   "table_struct": {
-    "table_name": ["column1", "column2", "id"]
+    "users": ["username", "email", "role", "active", "id"]
   },
-  "table_name": {
+  "users": {
     "1": {
-      "column1": "value",
+      "username": "ryannkim",
       "id": 1
     }
   }
@@ -164,25 +186,36 @@ type json_data = Record<string | number, data_structure>
 type main_structure = Record<string, json_data>
 
 interface insertOptions {
-	increment?: boolean
-	idLength?: number
+    increment?: boolean
+    idLength?: number
 }
 ```
 
 ## How it Works
 
-1. **Initialization:** `JsonED()` checks for the existence of the database file. If missing, it creates a new encrypted file with an initialized table structure.
-2. **Operations:** When calling `insert()`, `update()`, or `remove()`, the library:
-   - Synchronizes with the encrypted file.
-   - Performs the requested operation on the data cache.
-   - Automatically re-encrypts and saves the file to disk.
-3. **Encryption:** All data is encrypted using `json-enc-dec`, ensuring that even if someone gains access to the `.dat` file, the content remains secure without the key.
+1. **Initialization:** `JsonED()` checks for the database file. If missing, it initializes a new encrypted file.
+2. **Operations:** Every write operation (`insert`, `update`, `remove`) synchronizes with the encrypted file, performs the operation in-memory, and then flushes the re-encrypted data back to disk.
+3. **Encryption:** Powered by `json-enc-dec`, ensuring data at rest is secure.
+
+## Contributing
+
+Contributions are welcome! To maintain a clean and manageable history, please use **Semantic Commit Messages**:
+
+- `feat:` for new features
+- `fix:` for bug fixes
+- `docs:` for documentation changes
+- `style:` for formatting, missing semi colons, etc.
+- `refactor:` for refactoring production code
+- `test:` for adding missing tests
+- `chore:` for updating build tasks, package manager configs, etc.
+
+Example: `feat: add support for custom primary keys`
 
 ## Security Best Practices
 
-- **Keep Your Key Secret:** Your encryption key is the only way to recover your data. Never hardcode it in public repositories. Use environment variables.
-- **Backup Your Data:** While `JsonED` is secure, always keep backups of your `.dat` files.
-- **Key Consistency:** Using a different key on an existing database will fail to decrypt the data correctly.
+- **Environment Variables:** Never hardcode your encryption key. Use `.env` files or secrets managers.
+- **Key Consistency:** Using a different key on an existing database will result in decryption failure and potential data corruption if forced.
+- **Backups:** Regularly backup your `.dat` files. Encryption protects data privacy, not data loss.
 
 ## License
 

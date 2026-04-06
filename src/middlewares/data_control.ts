@@ -1,3 +1,6 @@
+/* NOTE: The only function of this file is just to hold the read and save to
+ * json (.dat) file for data store
+ */
 import { main_structure } from "../interface";
 import * as jsed from "json-enc-dec"
 
