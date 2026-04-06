@@ -30,7 +30,9 @@ export default function insert_data(filename: string, key: string, cache: main_s
 			}
 
 			if (opts?.idLength !== undefined) {
-				limit = opts.idLength
+				if (opts?.idLength > 5) {
+					limit = opts.idLength
+				}
 			}
 		}
 
