@@ -34,7 +34,7 @@ export default function JsonED(key: string, filename?: string) {
 	}
 
 	// TODO: To generate the file first
-	let cache: main_structure = generateJSON(filename, key)
+	const cache: main_structure = generateJSON(filename, key)
 
 	// INFO: The return functions or public functions
 	const insert = insert_data(filename, key, cache)

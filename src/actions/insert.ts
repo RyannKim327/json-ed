@@ -9,7 +9,7 @@ import { idGenerator, stringToJson } from "../utils";
 
 export default function insert_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
-		cache = read(filename, key)
+		Object.assign(cache, read(filename, key))
 	}
 
 	return (table: string, data: string | data_structure, opts?: insertOptions) => {

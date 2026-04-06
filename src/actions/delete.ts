@@ -8,7 +8,7 @@ import { read, save } from "../middlewares/data_control";
 
 export default function delete_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
-		cache = read(filename, key)
+		Object.assign(cache, read(filename, key))
 	}
 
 	return (table: string, id: string | number) => {
