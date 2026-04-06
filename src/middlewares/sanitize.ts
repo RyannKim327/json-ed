@@ -1,6 +1,6 @@
 import { data_structure, main_structure } from "../interface";
 
-export default function sanitizingData(table: string, data: data_structure, cache: main_structure): data_structure | { error: string } {
+export default function sanitizingData(table: string, data: data_structure, cache: main_structure) {
 	const allowedColumns = cache["table_struct"][table]
 
 	// TODO: Key filteration
@@ -10,6 +10,7 @@ export default function sanitizingData(table: string, data: data_structure, cach
 				delete data[key]
 			}
 		}
+
 	})
 
 	const temp: data_structure = data
