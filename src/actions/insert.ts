@@ -12,7 +12,7 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		cache = read(filename, key)
 	}
 
-	return (table: string, data: string | data_structure, opts: insertOptions) => {
+	return (table: string, data: string | data_structure, opts?: insertOptions) => {
 		let incremental = true
 		let limit = 12
 
