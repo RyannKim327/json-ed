@@ -9,7 +9,7 @@ import { idGenerator, stringToJson } from "../utils";
 
 export default function insert_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
-		cache = read(filename, key)
+		Object.assign(cache, read(filename, key))
 	}
 
 	return (table: string, data: string | data_structure, opts?: insertOptions) => {
@@ -66,9 +66,13 @@ export default function insert_data(filename: string, key: string, cache: main_s
 			id = idGenerator(limit)
 		}
 
-		cache[table][id] = data
+		cache[table][id] = {
+			...data,
+			id: id
+		}
+
 		save(filename, key, cache)
-		return cache
+		return cache[table][id]
 	}
 
 }

@@ -3,7 +3,8 @@ import * as jsed from "json-enc-dec"
 
 export function save(filename: string, key: string, data: main_structure) {
 	jsed.encrypt(data, key, {
-		saveTo: filename
+		saveTo: filename,
+		returnBuffer: false
 	})
 }
 

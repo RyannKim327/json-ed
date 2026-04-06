@@ -10,14 +10,9 @@ import insert_data from "./actions/insert";
 import read_data from "./actions/read";
 import { main_structure } from "./interface";
 import update_data from "./actions/update";
+import delete_data from "./actions/delete";
 
-export default function JsonED(filename?: string, key?: string) {
-
-	// TODO: To create a generalized key if ever that it is not existed
-	if (key === undefined) {
-		key = "random text from the internet"
-	}
-
+export default function JsonED(key: string, filename?: string) {
 	// TODO: To create a default name if it is blank
 	if (filename === undefined) {
 		filename = "data"
@@ -39,16 +34,18 @@ export default function JsonED(filename?: string, key?: string) {
 	}
 
 	// TODO: To generate the file first
-	let cache: main_structure = generateJSON(filename, key)
+	const cache: main_structure = generateJSON(filename, key)
 
 	// INFO: The return functions or public functions
 	const insert = insert_data(filename, key, cache)
 	const read = read_data(filename, key, cache)
 	const update = update_data(filename, key, cache)
+	const remove = delete_data(filename, key, cache)
 
 	return {
 		insert,
 		read,
+		remove,
 		update
 	}
 }
