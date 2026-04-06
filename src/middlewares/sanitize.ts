@@ -5,19 +5,20 @@ export default function sanitizingData(table: string, data: data_structure, cach
 
 	// TODO: Key filteration
 	if (
-		!Array.isArray(allowedColumns) ||
-		!Object.keys(data).every(col => allowedColumns.includes(col.toLowerCase()))
+		Array.isArray(allowedColumns) &&
+		Object.keys(data).every(col => allowedColumns.includes(col.toLowerCase()))
 	) {
+
+		const temp: data_structure = data
+		data = {}
+		allowedColumns.forEach((column: string) => {
+			data[column.toLowerCase()] = temp[column.toLowerCase()] ?? null
+		})
+
+		return data
+	} else {
 		return {
-			"error": "Invalid keys"
-		};
+			"error": "error"
+		}
 	}
-
-	const temp: data_structure = data
-	data = {}
-	allowedColumns.forEach((column: string) => {
-		data[column.toLowerCase()] = temp[column.toLowerCase()] ?? null
-	})
-
-	return data
 }
