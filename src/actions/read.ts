@@ -16,7 +16,7 @@ export default function read_data(filename: string, key: string, cache: main_str
 			throw new Error("The table is not found")
 		}
 
-		if (cache[table][id]) {
+		if (cache[table][id] === undefined) {
 			return { "error": `No data found related to ID: ${id}` }
 		}
 
