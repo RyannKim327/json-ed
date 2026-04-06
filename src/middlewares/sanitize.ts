@@ -6,7 +6,7 @@ export default function sanitizingData(table: string, data: data_structure, cach
 	// TODO: Key filteration
 	if (
 		!Array.isArray(allowedColumns) ||
-		!Object.keys(data).every(col => typeof allowedColumns.includes(col.toLowerCase()))
+		!Object.keys(data).every(col => allowedColumns.includes(col.toLowerCase()))
 	) {
 		return {
 			"error": "Invalid keys"
