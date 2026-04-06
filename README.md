@@ -15,7 +15,7 @@
 - **Built-in Encryption:** Uses `json-enc-dec` to keep your database files secure.
 - **Auto ID Generation:** Support for both random 12-character strings and incremental numeric IDs.
 - **TypeScript Support:** Fully typed for a better developer experience.
-- **Simple API:** Easy to initialize and perform basic operations.
+- **Simple API:** Easy to initialize and perform basic CRUD (Create, Read, Update, Delete) operations.
 
 ## Installation
 
@@ -32,10 +32,10 @@ Import `JsonED` and initialize your database. If the file doesn't exist, it will
 import JsonED from 'json-ed';
 
 /**
+ * @param key - Required: Secret key for encryption
  * @param filename - Optional: Name of the database file (defaults to "data")
- * @param key - Optional: Secret key for encryption (defaults to "random text from the internet")
  */
-const db = JsonED('my-database', 'my-secret-key');
+const db = JsonED('my-secret-key', 'my-database');
 ```
 
 > **Note:** The filename will automatically append `.dat` if not provided.
@@ -47,7 +47,7 @@ You can insert data into your tables by providing either a JSON object or a form
 This method is recommended for more structured data or when handling nested structures (though keep in mind that the storage is primarily flat key-value pairs per ID).
 
 ```typescript
-// insert(table: string, data: object, incremental?: boolean)
+// insert(table: string, data: object, opts?: insertOptions)
 db.insert('users', {
     username: 'ryannkim',
     role: 'developer',
@@ -70,15 +70,17 @@ db.insert('users', "username = user, age = 10, active = true, bio = 'software en
 - **Separators:** Use commas (`,`) to separate different fields.
 
 #### ID Generation Strategies
-- **Incremental IDs (Default):** Set `incremental` to `true` (or leave it out) to use numeric IDs (1, 2, 3...).
-- **Random IDs:** Set `incremental` to `false` to use random 12-character alphanumeric strings.
+By default, IDs are incremental (1, 2, 3...). You can customize this using the `opts` parameter.
 
 ```typescript
-// Generates incremental ID: 1, 2, 3...
-db.insert('logs', { event: 'startup' }, true);
+// Generates incremental ID: 1, 2, 3... (Default)
+db.insert('logs', { event: 'startup' }, { increment: true });
 
-// Generates random ID: "aB3cDe4fGh5i"
-db.insert('sessions', { token: 'xyz123' }, false);
+// Generates random 12-character alphanumeric ID: "aB3cDe4fGh5i"
+db.insert('sessions', { token: 'xyz123' }, { increment: false });
+
+// Generates random ID with custom length (minimum 6)
+db.insert('tokens', { value: 'abc' }, { increment: false, idLength: 16 });
 ```
 
 ### 3. Reading Data
@@ -90,6 +92,25 @@ const user = db.read('users', 1);
 console.log(user);
 ```
 
+### 4. Updating Data
+Modify an existing record. You can provide the new data as an object or a string format. This will merge the new data with the existing record.
+
+```typescript
+// update(table: string, id: string | number, data: object | string)
+db.update('users', 1, { active: false });
+
+// Using string format
+db.update('users', 1, "role = administrator, active = true");
+```
+
+### 5. Deleting Data
+Remove a specific record from a table.
+
+```typescript
+// remove(table: string, id: string | number)
+db.remove('users', 1);
+```
+
 ## Data Structure
 
 The internal structure of the database follows a hierarchical JSON format, organized by tables and unique identifiers:
@@ -98,7 +119,7 @@ The internal structure of the database follows a hierarchical JSON format, organ
 {
   [table: string]: {
     [id: string | number]: {
-      [column: string]: string | number | boolean
+      [column: string]: string | number | boolean | undefined | null
     }
   }
 }
@@ -107,18 +128,22 @@ The internal structure of the database follows a hierarchical JSON format, organ
 ### TypeScript Interfaces
 
 ```typescript
-type data_structure = Record<string, string | number | boolean>
+type data_structure = Record<string, string | number | boolean | undefined | null>
 type json_data = Record<string | number, data_structure>
 type main_structure = Record<string, json_data>
+
+interface insertOptions {
+	increment?: boolean
+	idLength?: number
+}
 ```
 
 ## How it Works
 
 1. **Initialization:** `JsonED()` checks for the existence of the database file. If it doesn't exist, it generates a new encrypted JSON structure.
-2. **Insertion:** When you call `insert()`, the library:
-   - Validates the table.
-   - Generates a unique ID (random or incremental).
-   - Appends the data.
+2. **Operations:** When you call `insert()`, `update()`, or `remove()`, the library:
+   - Validates the table and ID.
+   - Generates/Modifies/Deletes the data accordingly.
    - Re-encrypts and saves the file automatically.
 3. **Encryption:** All data is stored in an encrypted format using your provided key, making it unreadable without the proper credentials.
 
