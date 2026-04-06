@@ -1,7 +1,7 @@
 import { data_structure } from "./interface"
 
-export function idGenerator() {
-	const limit = 12
+export function idGenerator(length: number = 12) {
+	const limit = length
 	const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	let code = ""
 	for (let i = 0; i < limit; i++) {
