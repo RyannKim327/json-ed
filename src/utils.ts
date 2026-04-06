@@ -12,6 +12,13 @@ export function idGenerator(length: number = 12) {
 	return code
 }
 
+
+export function toLowerCaseKeys(data: data_structure) {
+	return Object.fromEntries(
+		Object.entries(data).map(([key, value]) => [key.toLowerCase(), value])
+	)
+}
+
 export function parseValue(raw: string): string | number | boolean | undefined | null {
 	const value = raw.trim();
 	if (value === undefined) return undefined

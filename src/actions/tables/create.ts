@@ -19,7 +19,17 @@ export default function createTable(filename: string, key: string, cache: main_s
 
 		// TODO: Clearing cache table
 		cache[table] = {}
-		cache[`tbl_struct_${table}`] = columns
+
+		// TODO: To make all columns in lowercase
+		for (let i = 0; i < columns.length; i++) {
+			columns[i] = columns[i].toLowerCase()
+		}
+
+		if (!columns.includes("id")) {
+			columns.push("id")
+		}
+
+		cache["table_struct"][table] = columns
 
 		return {
 			"message": "New table created"

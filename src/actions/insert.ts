@@ -5,7 +5,7 @@
 
 import { data_structure, insertOptions, main_structure } from "../interface";
 import { read, save } from "../middlewares/data_control";
-import { idGenerator, stringToJson } from "../utils";
+import { idGenerator, stringToJson, toLowerCaseKeys } from "../utils";
 
 export default function insert_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -24,6 +24,8 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		if (typeof (data) === "string") {
 			data = stringToJson(data)
 		}
+
+		data = toLowerCaseKeys(data)
 
 		// TODO: For string testing
 		// console.log(data)
