@@ -12,7 +12,7 @@ import { main_structure } from "./interface";
 import update_data from "./actions/update";
 import delete_data from "./actions/delete";
 
-export default function JsonED(filename?: string, key: string) {
+export default function JsonED(key: string, filename?: string) {
 	// TODO: To create a default name if it is blank
 	if (filename === undefined) {
 		filename = "data"
