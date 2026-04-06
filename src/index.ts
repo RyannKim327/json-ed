@@ -10,6 +10,7 @@ import insert_data from "./actions/insert";
 import read_data from "./actions/read";
 import { main_structure } from "./interface";
 import update_data from "./actions/update";
+import delete_data from "./actions/delete";
 
 export default function JsonED(filename?: string, key: string) {
 	// TODO: To create a default name if it is blank
@@ -39,10 +40,12 @@ export default function JsonED(filename?: string, key: string) {
 	const insert = insert_data(filename, key, cache)
 	const read = read_data(filename, key, cache)
 	const update = update_data(filename, key, cache)
+	const remove = delete_data(filename, key, cache)
 
 	return {
 		insert,
 		read,
+		remove,
 		update
 	}
 }
