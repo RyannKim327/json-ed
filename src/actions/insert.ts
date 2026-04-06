@@ -3,16 +3,19 @@
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */
 
-import { data_structure, json_data, main_structure } from "../interface";
+import { data_structure, insertOptions, main_structure } from "../interface";
 import { read, save } from "../middlewares/data_control";
-import { idGenerator, parseValue, stringToJson } from "../utils";
+import { idGenerator, stringToJson } from "../utils";
 
 export default function insert_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
 		cache = read(filename, key)
 	}
 
-	return (table: string, data: string | data_structure, incremental?: boolean) => {
+	return (table: string, data: string | data_structure, opts: insertOptions) => {
+		let incremental = true
+		let limit = 12
+
 		if (typeof (data) === "string") {
 			data = stringToJson(data)
 		}
@@ -21,8 +24,14 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		// console.log(data)
 		// return {}
 
-		if (incremental === undefined) {
-			incremental = true
+		if (opts !== undefined) {
+			if (opts?.increment !== undefined) {
+				incremental = opts.increment
+			}
+
+			if (opts?.idLength !== undefined) {
+				limit = opts.idLength
+			}
 		}
 
 		let id: string | number = 1
@@ -47,12 +56,12 @@ export default function insert_data(filename: string, key: string, cache: main_s
 			}
 		} else if (!incremental && cache[table] !== undefined) {
 			const keys = Object.keys(cache[table])
-			id = idGenerator()
+			id = idGenerator(limit)
 			while (keys.includes(id)) {
-				id = idGenerator()
+				id = idGenerator(limit)
 			}
 		} else if (!incremental) {
-			id = idGenerator()
+			id = idGenerator(limit)
 		}
 
 		cache[table][id] = data
