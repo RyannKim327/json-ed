@@ -66,7 +66,11 @@ export default function insert_data(filename: string, key: string, cache: main_s
 			id = idGenerator(limit)
 		}
 
-		cache[table][id] = data
+		cache[table][id] = {
+			...data,
+			id: id
+		}
+
 		save(filename, key, cache)
 		return cache[table][id]
 	}
