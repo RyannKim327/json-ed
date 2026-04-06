@@ -3,8 +3,12 @@ import { read, save } from "./data_control"
 
 export default function generateJSON(filename: string, key: string) {
 	if (!fs.existsSync(filename)) {
-		save(filename, key, {})
-		return {}
+		save(filename, key, { "table_struct": {} })
+		return { "table_struct": {} }
 	}
-	return read(filename, key)
+	const data = read(filename, key)
+	if (data["table_struct"] === undefined) {
+		data["table_struct"] = {}
+	}
+	return data
 }

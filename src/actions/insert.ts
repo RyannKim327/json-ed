@@ -18,7 +18,7 @@ export default function insert_data(filename: string, key: string, cache: main_s
 
 		// TODO: To question the existence of table
 		if (cache[table] === undefined) {
-			throw new Error("The table is not existed. Please create a table first")
+			throw new Error("Please create a table first before you add data on this table")
 		}
 
 		if (typeof (data) === "string") {
