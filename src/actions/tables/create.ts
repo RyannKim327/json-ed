@@ -1,4 +1,4 @@
-/* NOTE: This file controls to create a tabale inside of json file
+/* NOTE: This file controls to create a table inside of json file
  * The code structure is like this file in the repository fca-unofficial
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */
@@ -21,7 +21,7 @@ export default function createTable(filename: string, key: string, cache: main_s
 
 		// TODO: To prevent overwrite of the table
 		if (cache[table] !== undefined) {
-			throw new Error("Table is already existed")
+			return { "message": "Table is already existed" }
 		}
 
 		// TODO: Clearing cache table
