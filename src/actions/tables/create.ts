@@ -4,7 +4,7 @@
  */
 
 import { main_structure } from "../../interface";
-import { read } from "../../middlewares/data_control";
+import { read, save } from "../../middlewares/data_control";
 
 export default function createTable(filename: string, key: string, cache: main_structure) {
 	return (table: string, columns: string[]) => {
@@ -38,6 +38,7 @@ export default function createTable(filename: string, key: string, cache: main_s
 
 		cache["table_struct"][table] = columns
 
+		save(filename, key, cache)
 		return {
 			"message": "New table created"
 		}
