@@ -42,9 +42,13 @@ export default function update_data(filename: string, key: string, cache: main_s
 		}
 
 		Object.keys(data).forEach((key) => {
-			if (!Array.isArray(cache[table][id])) {
-				(cache[table][id] as Record<string, unknown>)[key] =
-					(data as Record<string, unknown>)[key]
+			// TODO: To filter only allowed columns
+			const keys = Object.keys(cache["table_struct"][table])
+			if (keys.includes(key)) {
+				if (!Array.isArray(cache[table][id])) {
+					(cache[table][id] as Record<string, unknown>)[key] =
+						(data as Record<string, unknown>)[key]
+				}
 			}
 		})
 
