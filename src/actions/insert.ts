@@ -16,6 +16,11 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		let incremental = true
 		let limit = 12
 
+		// TODO: To question the existence of table
+		if (cache[table] === undefined) {
+			throw new Error("The table is not existed. Please create a table first")
+		}
+
 		if (typeof (data) === "string") {
 			data = stringToJson(data)
 		}
@@ -37,9 +42,6 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		}
 
 		let id: string | number = 1
-		if (cache[table] === undefined) {
-			cache[table] = {}
-		}
 
 		// TODO: For ID auto generator
 		const keys = Object.keys(cache[table])
