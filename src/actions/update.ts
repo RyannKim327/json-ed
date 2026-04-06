@@ -5,7 +5,8 @@
 
 import { data_structure, main_structure } from "../interface";
 import { read, save } from "../middlewares/data_control";
-import { stringToJson } from "../utils";
+import sanitizingData from "../middlewares/sanitize";
+import { stringToJson, toLowerCaseKeys } from "../utils";
 
 export default function update_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -13,6 +14,13 @@ export default function update_data(filename: string, key: string, cache: main_s
 	}
 
 	return (table: string, id: string | number, data: string | data_structure) => {
+		table = table.toLowerCase()
+
+		// TODO: To prevent reserved table to access
+		if (table === "table_struct") {
+			throw new Error("Cannot access reserved table: table_struct");
+		}
+
 		if (cache[table] === undefined) {
 			throw new Error("No Table Found")
 		}
@@ -25,10 +33,23 @@ export default function update_data(filename: string, key: string, cache: main_s
 			throw new Error(`Data with id: ${id} is undefined`)
 		}
 
-		const keys = Object.keys(data)
+		data = toLowerCaseKeys(data)
+		data = sanitizingData(table, data, cache)
 
-		keys.forEach(key => {
-			cache[table][id][key] = data[key]
+		// TODO: This function is to force to use only allowed keys
+		if (!cache[table][id]) {
+			cache[table][id] = {}
+		}
+
+		Object.keys(data).forEach((key) => {
+			// TODO: To filter only allowed columns
+			const keys = Object.keys(cache["table_struct"][table])
+			if (keys.includes(key)) {
+				if (!Array.isArray(cache[table][id])) {
+					(cache[table][id] as Record<string, unknown>)[key] =
+						(data as Record<string, unknown>)[key]
+				}
+			}
 		})
 
 		save(filename, key, cache)

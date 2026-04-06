@@ -5,7 +5,7 @@
 
 import { data_structure, insertOptions, main_structure } from "../interface";
 import { read, save } from "../middlewares/data_control";
-import { idGenerator, stringToJson } from "../utils";
+import { idGenerator, stringToJson, toLowerCaseKeys } from "../utils";
 
 export default function insert_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -16,9 +16,25 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		let incremental = true
 		let limit = 12
 
+		table = table.toLowerCase()
+		// TODO: To prevent reserved table to access
+		if (table === "table_struct") {
+			throw new Error("Cannot access reserved table: table_struct");
+		}
+
+		// TODO: To question the existence of table
+		// This error must create a table first for the list of columns
+		// It is very important to create first rather than automatically create
+		// to prevent some non-sql injection
+		if (cache[table] === undefined) {
+			throw new Error("Please create a table first before you add data on this table")
+		}
+
 		if (typeof (data) === "string") {
 			data = stringToJson(data)
 		}
+
+		data = toLowerCaseKeys(data)
 
 		// TODO: For string testing
 		// console.log(data)
@@ -37,9 +53,6 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		}
 
 		let id: string | number = 1
-		if (cache[table] === undefined) {
-			cache[table] = {}
-		}
 
 		// TODO: For ID auto generator
 		const keys = Object.keys(cache[table])

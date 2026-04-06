@@ -11,6 +11,7 @@ import read_data from "./actions/read";
 import { main_structure } from "./interface";
 import update_data from "./actions/update";
 import delete_data from "./actions/delete";
+import create_table from "./actions/tables/create";
 
 export default function JsonED(key: string, filename?: string) {
 	// TODO: To create a default name if it is blank
@@ -41,11 +42,13 @@ export default function JsonED(key: string, filename?: string) {
 	const read = read_data(filename, key, cache)
 	const update = update_data(filename, key, cache)
 	const remove = delete_data(filename, key, cache)
+	const create = create_table(filename, key, cache)
 
 	return {
 		insert,
 		read,
 		remove,
-		update
+		update,
+		create
 	}
 }

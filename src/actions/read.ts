@@ -12,9 +12,21 @@ export default function read_data(filename: string, key: string, cache: main_str
 	}
 
 	return (table: string, id: string | number) => {
-		if (cache[table] === undefined) {
-			throw new Error("No Table Found")
+		table = table.toLowerCase()
+
+		// TODO: To prevent reserved table to access
+		if (table === "table_struct") {
+			throw new Error("Cannot access reserved table: table_struct");
 		}
+
+		if (cache[table] === undefined) {
+			throw new Error("The table is not found")
+		}
+
+		if (cache[table][id] === undefined) {
+			return { "error": `No data found related to ID: ${id}` }
+		}
+
 		return cache[table][id]
 	}
 }

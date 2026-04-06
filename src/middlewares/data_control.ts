@@ -6,6 +6,7 @@ export function save(filename: string, key: string, data: main_structure) {
 		saveTo: filename,
 		returnBuffer: false
 	})
+	return data
 }
 
 export function read(filename: string, key: string) {
