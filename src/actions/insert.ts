@@ -17,6 +17,9 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		let limit = 12
 
 		// TODO: To question the existence of table
+		// This error must create a table first for the list of columns
+		// It is very important to create first rather than automatically create
+		// to prevent some non-sql injection
 		if (cache[table] === undefined) {
 			throw new Error("Please create a table first before you add data on this table")
 		}
