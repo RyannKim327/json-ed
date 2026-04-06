@@ -1,4 +1,4 @@
-/* NOTE: This file controls the entering from data as raw to json
+/* NOTE: This file controls the reading data as raw to json
  * The code structure is like this file in the repository fca-unofficial
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */

@@ -1,4 +1,4 @@
-/* NOTE: This file controls the entering from data as raw to json
+/* NOTE: This file controls the deletion data as raw to json
  * The code structure is like this file in the repository fca-unofficial
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */
@@ -15,7 +15,10 @@ export default function delete_data(filename: string, key: string, cache: main_s
 		if (cache[table] === undefined) {
 			throw new Error("No Table Found")
 		}
-		cache[table][id] = undefined
+
+		// TODO: To deletethe data
+		delete cache[table][id]
+
 		save(filename, key, cache)
 		return {
 			"message": "Deleted successfully"
