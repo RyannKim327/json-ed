@@ -11,13 +11,7 @@ import read_data from "./actions/read";
 import { main_structure } from "./interface";
 import update_data from "./actions/update";
 
-export default function JsonED(filename?: string, key?: string) {
-
-	// TODO: To create a generalized key if ever that it is not existed
-	if (key === undefined) {
-		key = "random text from the internet"
-	}
-
+export default function JsonED(filename?: string, key: string) {
 	// TODO: To create a default name if it is blank
 	if (filename === undefined) {
 		filename = "data"

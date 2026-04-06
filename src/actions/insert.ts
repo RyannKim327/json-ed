@@ -68,7 +68,7 @@ export default function insert_data(filename: string, key: string, cache: main_s
 
 		cache[table][id] = data
 		save(filename, key, cache)
-		return cache
+		return cache[table][id]
 	}
 
 }
