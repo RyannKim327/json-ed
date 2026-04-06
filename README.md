@@ -63,7 +63,7 @@ db.create('users', ['username', 'email', 'role', 'active']);
 ```
 
 ### 3. Inserting Data
-You can insert data into your tables by providing either a JSON object or a formatted string. If the table doesn't exist, it will be created automatically.
+You can insert data into your tables by providing either a JSON object or a formatted string. If the table doesn't exist, it will return to an error.
 
 #### Using JSON (Object)
 This method is recommended for structured data.
