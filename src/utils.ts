@@ -12,16 +12,15 @@ export function idGenerator(length: number = 12) {
 	return code
 }
 
-
 export function toLowerCaseKeys(data: data_structure) {
 	return Object.fromEntries(
 		Object.entries(data).map(([key, value]) => [key.toLowerCase(), value])
-	)
+	);
 }
 
 export function parseValue(raw: string): string | number | boolean | undefined | null {
 	const value = raw.trim();
-	if (value === undefined) return undefined
+	if (value === undefined) return null
 	if (value === null) return null
 	if (value === "") return ""
 
@@ -42,7 +41,7 @@ export function stringToJson(data: string) {
 	while ((match = pattern.exec(data)) !== null) {
 		const key = match[1].replace(/\s/gi, "").trim();
 		const valueRaw = match[2] ?? match[3] ?? match[4];
-		temp[key] = parseValue(valueRaw);
+		temp[key] = parseValue(valueRaw) ?? null;
 	}
 
 	return temp

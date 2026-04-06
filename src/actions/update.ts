@@ -5,6 +5,7 @@
 
 import { data_structure, main_structure } from "../interface";
 import { read, save } from "../middlewares/data_control";
+import sanitizingData from "../middlewares/sanitize";
 import { stringToJson, toLowerCaseKeys } from "../utils";
 
 export default function update_data(filename: string, key: string, cache: main_structure) {
@@ -32,11 +33,19 @@ export default function update_data(filename: string, key: string, cache: main_s
 			throw new Error(`Data with id: ${id} is undefined`)
 		}
 
-		const keys = Object.keys(data)
 		data = toLowerCaseKeys(data)
+		data = sanitizingData(table, data, cache)
 
-		keys.forEach((key: string) => {
-			cache[table][id][key.toLowerCase()] = data[key.toLowerCase()]
+		// TODO: This function is to force to use only allowed keys
+		if (!cache[table][id]) {
+			cache[table][id] = {}
+		}
+
+		Object.keys(data).forEach((key) => {
+			if (!Array.isArray(cache[table][id])) {
+				(cache[table][id] as Record<string, unknown>)[key] =
+					(data as Record<string, unknown>)[key]
+			}
 		})
 
 		save(filename, key, cache)
