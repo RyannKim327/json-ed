@@ -37,7 +37,8 @@ async function updateData() {
 }
 
 async function main() {
-	while (true) {
+	let t = true
+	while (t) {
 		const cmd = await input("Enter command (0=insert, 1=read, 2=update, 9=exit): ");
 		const i = parseInt(cmd);
 
@@ -51,9 +52,11 @@ async function main() {
 			case 2:
 				await updateData();
 				break;
-			case 9:
+			case 3:
 				rl.close();
 				return;
+			case 5:
+				t = false
 			default:
 				console.log("Invalid command");
 		}
