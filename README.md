@@ -21,6 +21,7 @@
 - [Data Structure](#data-structure)
 - [How it Works](#how-it-works)
 - [Security Best Practices](#security-best-practices)
+- [Changelog](CHANGELOG.md)
 - [License](#license)
 
 ## Features
@@ -220,3 +221,7 @@ Example: `feat: add support for custom primary keys`
 ## License
 
 This project is licensed under the [MIT License](LICENSE.md).
+
+---
+<!-- NOTE: Only the developer is allowed to change the version number, but suggestions for updates are always welcome. -->
+[View Changelog](CHANGELOG.md)
