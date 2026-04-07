@@ -2,7 +2,7 @@
 ### MPOP Reverse II [Ryann Kim M. Sesgundo]
 
 [![wakatime](https://wakatime.com/badge/user/61954829-dd88-47de-8b67-7d673663ea1c/project/60a5ecd1-86d9-48f9-9ce9-abadb9470de2.svg)](https://wakatime.com/badge/user/61954829-dd88-47de-8b67-7d673663ea1c/project/60a5ecd1-86d9-48f9-9ce9-abadb9470de2)
-[![npm version](https://img.shields.io/npm/v/json-ed.svg)](https://www.npmjs.com/package/json-ed)
+[![npm version](https://img.shields.io/npm/v/json-ed.svg)](https://www.npmjs.com/package/json-edb)
 
 **JsonED** is a TypeScript-based ORM-like library (currently in beta) designed to manage JSON data as a relational-like database with built-in encryption. It simplifies data persistence by providing a structured way to handle tables, rows, and automatic ID generation while keeping your data secure.
 
@@ -50,7 +50,7 @@ To get started, you need to initialize **JsonED** with a secret encryption key. 
 You can specify a name for your database. The `.dat` extension will be added automatically if you don't provide it.
 
 ```typescript
-import JsonED from 'json-ed';
+import { JsonED } from 'json-edb';
 
 // This creates/loads 'my-database.dat'
 const db = JsonED('your-secret-key', 'my-database');
@@ -60,7 +60,7 @@ const db = JsonED('your-secret-key', 'my-database');
 If you omit the second parameter, the database will default to `data.dat`.
 
 ```typescript
-import JsonED from 'json-ed';
+import { JsonED } from 'json-edb';
 
 // This creates/loads 'data.dat'
 const db = JsonED('your-secret-key');
