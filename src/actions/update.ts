@@ -31,6 +31,7 @@ export default function update_data(filename: string, key: string, cache: main_s
 
 		if (cache[table][id] === undefined) {
 			c("Update Data", "e", `Data with id: ${id} is undefined`)
+			return
 		}
 
 		data = toLowerCaseKeys(data)
