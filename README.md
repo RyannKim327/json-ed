@@ -1,10 +1,10 @@
-# JsonED (JSON Encrypted Database)
+# Ormyx (JSON-based Relational Database)
 ### MPOP Reverse II [Ryann Kim M. Sesgundo]
 
 [![wakatime](https://wakatime.com/badge/user/61954829-dd88-47de-8b67-7d673663ea1c/project/60a5ecd1-86d9-48f9-9ce9-abadb9470de2.svg)](https://wakatime.com/badge/user/61954829-dd88-47de-8b67-7d673663ea1c/project/60a5ecd1-86d9-48f9-9ce9-abadb9470de2)
-[![npm version](https://img.shields.io/npm/v/json-ed.svg)](https://www.npmjs.com/package/json-edb)
+[![npm version](https://img.shields.io/npm/v/ormyx.svg)](https://www.npmjs.com/package/ormyx)
 
-**JsonED** is a TypeScript-based ORM-like library (currently in beta) designed to manage JSON data as a relational-like database with built-in encryption. It simplifies data persistence by providing a structured way to handle tables, rows, and automatic ID generation while keeping your data secure.
+**Ormyx** is a TypeScript-based ORM-like library designed to manage JSON data as a relational-like database with built-in encryption. It simplifies data persistence by providing a structured way to handle tables, rows, and automatic ID generation while keeping your data secure.
 
 ## Note
 > I don't recommend using this for large-scale projects; it's best suited for small projects, prototypes, or hobbies. This was created for fun and as a way to expand my ideas and knowledge.
@@ -37,33 +37,33 @@
 ## Installation
 
 ```bash
-npm install json-edb
+npm install ormyx
 ```
 
 ## How To
 
 ### 1. Initialization
-#### `JsonED(key: string, filename?: string)`
-To get started, you need to initialize **JsonED** with a secret encryption key. If the database file does not exist, it will be created automatically.
+#### `ormyx(key: string, filename?: string)`
+To get started, you need to initialize **Ormyx** with a secret encryption key. If the database file does not exist, it will be created automatically.
 
 **Option A: Providing a Custom Filename**
 You can specify a name for your database. The `.dat` extension will be added automatically if you don't provide it.
 
 ```typescript
-import { JsonED } from 'json-edb';
+import { ormyx } from 'ormyx';
 
 // This creates/loads 'my-database.dat'
-const db = JsonED('your-secret-key', 'my-database');
+const db = ormyx('your-secret-key', 'my-database');
 ```
 
 **Option B: Using the Default Filename (Optional)**
 If you omit the second parameter, the database will default to `data.dat`.
 
 ```typescript
-import { JsonED } from 'json-edb';
+import { ormyx } from 'ormyx';
 
 // This creates/loads 'data.dat'
-const db = JsonED('your-secret-key');
+const db = ormyx('your-secret-key');
 ```
 
 > **Warning:** The encryption key is the only way to access your data. If you lose the key or use a different one later, you will not be able to read the existing database. Always store your keys in environment variables!
@@ -86,16 +86,15 @@ This method is recommended for structured data and better type safety.
 
 ```typescript
 // Example: db.insert('users', { username: 'ryannkim', active: true })
-const result = db.insert('users', {
-    username: 'ryannkim',
-    role: 'developer',
-    active: true
-});
-
-if (result.error) {
-    console.error('Failed to insert:', result.error);
-} else {
+try {
+    const result = db.insert('users', {
+        username: 'ryannkim',
+        role: 'developer',
+        active: true
+    });
     console.log('Inserted record:', result);
+} catch (error) {
+    console.error('Failed to insert:', error.message);
 }
 ```
 
@@ -135,10 +134,10 @@ Retrieve a specific record by its ID.
 // Example: db.read('users', 1)
 const user = db.read('users', 1);
 
-if (user.error) {
-    console.error('Record not found:', user.error);
-} else {
+if (user) {
     console.log('User data:', user);
+} else {
+    console.error('Record not found');
 }
 ```
 
@@ -161,6 +160,7 @@ Remove a specific record from a table.
 ```typescript
 // Example: db.remove('users', 1)
 const status = db.remove('users', 1);
+console.log(status.message); // "Deleted successfully"
 ```
 
 ### 7. Altering Tables
@@ -211,7 +211,7 @@ interface insertOptions {
 
 ## How it Works
 
-1. **Initialization:** `JsonED()` checks for the database file. If missing, it initializes a new encrypted file.
+1. **Initialization:** `ormyx()` checks for the database file. If missing, it initializes a new encrypted file.
 2. **Operations:** Every write operation (`insert`, `update`, `remove`) synchronizes with the encrypted file, performs the operation in-memory, and then flushes the re-encrypted data back to disk.
 3. **Encryption:** Powered by `json-enc-dec`, ensuring data at rest is secure.
 
@@ -221,6 +221,7 @@ Contributions are welcome! To maintain a clean and manageable history, please us
 
 - `feat:` for new features
 - `fix:` for bug fixes
+- `rebrand:` for rebranding changes
 - `docs:` or `doc:` for documentation changes
 - `style:` for formatting, missing semi colons, etc.
 - `refactor:` for refactoring production code
