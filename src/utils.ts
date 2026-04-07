@@ -74,7 +74,7 @@ export function stringToJson(data: string) {
 	let match;
 
 	while ((match = pattern.exec(data)) !== null) {
-		const key = match[1].replace(/\s/gi, "").trim();
+		const key = match[1].replace(/\s/gi, "").trim().toLowerCase();
 		const valueRaw = match[2] ?? match[3] ?? match[4];
 		temp[key] = parseValue(valueRaw) ?? null;
 	}
