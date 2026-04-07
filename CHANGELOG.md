@@ -4,11 +4,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- NOTE: Only the developer is allowed to change the version number, but suggestions for updates are always welcome. -->
 
-## [2026-04-07]
+## [0.0.1-beta] - 2026-04-07
 - **feat:** Added console errors, logs, and warnings.
 - **feat:** Added `alter` table functionality.
 - **chore:** Initial work on `alter` and general updates.
 - **doc:** Updated documentation.
+- **release:** First beta release on npm.
 
 ## [2026-04-06]
 - **feat:** Added options in `insert` for increment and ID length.

@@ -1,6 +1,6 @@
 {
-  "name": "json-ed",
-  "version": "0.0.1",
+  "name": "json-edb",
+  "version": "0.0.1-beta.3",
   "description": "A ORM-Based program for making JSON a relational-like database",
   "keywords": [
     "orm",
@@ -19,6 +19,7 @@
   "type": "commonjs",
   "main": "dist/index.js",
   "scripts": {
+    "build": "tsc",
     "test": "tsx test"
   },
   "dependencies": {

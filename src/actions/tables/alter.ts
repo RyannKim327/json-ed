@@ -16,22 +16,30 @@ export default function alter(filename: string, key: string, cache: main_structu
 		if (table === "table_struct") {
 			throw new Error("Cannot access reserved table: table_struct");
 		}
+		const current = cache[reservedTable]?.[table];
 
-		if (deleteCol !== undefined) {
-			deleteCol.map((col: string, i: number) => {
-				if (Array.isArray(cache[reservedTable][table])) {
-					if (cache[reservedTable][table][i] !== col) {
-						cache[reservedTable][table] = cache[reservedTable][table].splice(i, 1)
-					}
-				}
-			})
-		}
-		if (newCol !== undefined) {
-			if (Array.isArray(cache[reservedTable][table])) {
-				cache[reservedTable][table] = [...cache[reservedTable][table], ...newCol]
+		if (Array.isArray(current)) {
+			let updated: string[] = [...current];
+
+			if (deleteCol !== undefined) {
+				updated = updated.filter(
+					(col: string) => !deleteCol.includes(col)
+				);
 			}
+
+			if (newCol !== undefined) {
+				const cols: string[] = Array.isArray(newCol)
+					? newCol
+					: Object.values(newCol); // convert Record → string[]
+
+				updated = [...updated, ...cols];
+			}
+
+			cache[reservedTable][table] = updated;
+			save(filename, key, cache)
+
 		}
-		save(filename, key, cache)
+
 		return cache
 	}
 }
