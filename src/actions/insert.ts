@@ -50,15 +50,17 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		let id: string | number = 1
 		if (cache["table_struct"][table]["id"] === "number") {
 			const keys = Object.keys(cache[table])
-			id = keys[keys.length - 1]
-			if (typeof (id) === "number") {
-				id++
-			} else {
-				try {
-					id = parseInt(id)
+			if (keys.length > 0) {
+				id = keys[keys.length - 1]
+				if (typeof (id) === "number") {
 					id++
-				} catch (e) {
-					throw new Error("ID can't be parse to numbers")
+				} else {
+					try {
+						id = parseInt(id)
+						id++
+					} catch (e) {
+						throw new Error("ID can't be parse to numbers")
+					}
 				}
 			}
 		} else {
