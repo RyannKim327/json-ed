@@ -3,12 +3,13 @@
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */
 
-import { main_structure } from "../../interface";
+import { data_structure, main_structure } from "../../interface";
 import { save } from "../../middlewares/data_control";
-import { c } from "../../utils";
+import { stringToJson } from "../../utils";
 
 export default function alter(filename: string, key: string, cache: main_structure) {
-	return (table: string, newCol?: string[], deleteCol?: string[]) => {
+
+	return (table: string, newCol?: string | data_structure, deleteCol?: string[]) => {
 		// TODO: Development soon, but I already have an idea, I need to figure it out first
 		table = table.toLowerCase()
 		const reservedTable = "table_struct"
@@ -24,20 +25,30 @@ export default function alter(filename: string, key: string, cache: main_structu
 		const current = cache[reservedTable]?.[table];
 
 		if (Array.isArray(current)) {
-			let updated: string[] = [...current];
+			let updated: data_structure = current;
 
 			if (deleteCol !== undefined) {
-				updated = updated.filter(
-					(col: string) => !deleteCol.includes(col)
-				);
+				for (const key of Object.keys(updated)) {
+					if (!deleteCol.includes(key)) {
+						delete updated[key];
+					}
+				}
 			}
 
 			if (newCol !== undefined) {
-				const cols: string[] = Array.isArray(newCol)
-					? newCol
-					: Object.values(newCol); // convert Record → string[]
+				if (typeof newCol === "string") {
+					newCol = stringToJson(newCol)
+				}
 
-				updated = [...updated, ...cols];
+				updated = {
+					...updated,
+					...newCol
+				}
+				// const cols: string[] = Array.isArray(newCol)
+				// 	? newCol
+				// 	: Object.values(newCol); // convert Record → string[]
+				//
+				// updated = [...updated, ...cols];
 			}
 
 			cache[reservedTable][table] = updated;
