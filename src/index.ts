@@ -13,7 +13,7 @@ import update_data from "./actions/update";
 import delete_data from "./actions/delete";
 import create_table from "./actions/tables/create";
 
-export default function JsonED(key: string, filename?: string) {
+export function JsonED(key: string, filename?: string) {
 	// TODO: To create a default name if it is blank
 	if (filename === undefined) {
 		filename = "data"
