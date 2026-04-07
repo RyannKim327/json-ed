@@ -97,7 +97,9 @@ export function tableValidator(data: string) {
 				if (valueRaw === "int") {
 					valueRaw = "number"
 				}
-				temp[key] = valueRaw;
+				if (typeof valueRaw === "string") {
+					temp[key] = valueRaw;
+				}
 			}
 		}
 	}

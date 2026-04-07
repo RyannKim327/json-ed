@@ -3,7 +3,7 @@
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */
 
-import { main_structure, table_struct } from "../../interface";
+import { data_structure, main_structure, table_base, table_struct } from "../../interface";
 import { save } from "../../middlewares/data_control";
 import { tableValidator } from "../../utils";
 
@@ -23,10 +23,10 @@ export default function alter(filename: string, key: string, cache: main_structu
 		}
 
 		// FIX: Type error
-		const current: table_struct = cache[reservedTable]?.[table];
+		const current: table_struct | data_structure = cache[reservedTable]?.[table];
 
 		if (Array.isArray(current)) {
-			let updated: table_struct = current;
+			let updated: table_struct | data_structure = current;
 
 			if (deleteCol !== undefined) {
 				for (const key of Object.keys(updated)) {
