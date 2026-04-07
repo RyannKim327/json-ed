@@ -21,6 +21,7 @@
 - [Data Structure](#data-structure)
 - [How it Works](#how-it-works)
 - [Security Best Practices](#security-best-practices)
+- [Changelog](CHANGELOG.md)
 - [License](#license)
 
 ## Features
@@ -203,10 +204,11 @@ Contributions are welcome! To maintain a clean and manageable history, please us
 
 - `feat:` for new features
 - `fix:` for bug fixes
-- `docs:` for documentation changes
+- `docs:` or `doc:` for documentation changes
 - `style:` for formatting, missing semi colons, etc.
 - `refactor:` for refactoring production code
 - `test:` for adding missing tests
+
 - `chore:` for updating build tasks, package manager configs, etc.
 
 Example: `feat: add support for custom primary keys`
@@ -220,3 +222,7 @@ Example: `feat: add support for custom primary keys`
 ## License
 
 This project is licensed under the [MIT License](LICENSE.md).
+
+---
+<!-- NOTE: Only the developer is allowed to change the version number, but suggestions for updates are always welcome. -->
+[View Changelog](CHANGELOG.md)
