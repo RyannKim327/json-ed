@@ -26,6 +26,7 @@ export default function read_data(filename: string, key: string, cache: main_str
 
 		if (cache[table][id] === undefined) {
 			c("Read Data", "e", `No data found related to ID: ${id}`)
+			return
 		}
 
 		return cache[table][id]
