@@ -1,4 +1,4 @@
-import { data_structure } from "./interface"
+import { data_structure, table_struct } from "./interface"
 
 export function c(from: string, status: string, message: string) {
 	status = status.toLowerCase()
@@ -53,7 +53,7 @@ export function toLowerCaseKeys(data: data_structure) {
 	);
 }
 
-export function parseValue(raw: string): string | number | boolean | undefined | null {
+export function parseValue(raw: string): string | number | boolean | null {
 	const value = raw.trim();
 	if (value === undefined) return null
 	if (value === null) return null
@@ -74,9 +74,34 @@ export function stringToJson(data: string) {
 	let match;
 
 	while ((match = pattern.exec(data)) !== null) {
-		const key = match[1].replace(/\s/gi, "").trim();
+		const key = match[1].replace(/\s/gi, "").trim().toLowerCase();
 		const valueRaw = match[2] ?? match[3] ?? match[4];
 		temp[key] = parseValue(valueRaw) ?? null;
+	}
+
+	return temp
+}
+
+export function tableValidator(data: string) {
+	const pattern = /([\s\w]+)\s*=\s*(?:'([^']*)'|"([^"]*)"|([^,]*))/gi
+	const temp: table_struct = {}
+	let match;
+
+	const types = ["string", "number", "boolean", "null", "int"]
+
+	while ((match = pattern.exec(data)) !== null) {
+		const key = match[1].replace(/\s/gi, "").trim().toLowerCase();
+		let valueRaw = match[2] ?? match[3] ?? match[4];
+		if (valueRaw !== null) {
+			if (types.includes(valueRaw)) {
+				if (valueRaw === "int") {
+					valueRaw = "number"
+				}
+				if (typeof valueRaw === "string") {
+					temp[key] = valueRaw;
+				}
+			}
+		}
 	}
 
 	return temp

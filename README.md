@@ -69,13 +69,34 @@ const db = ormyx('your-secret-key');
 > **Warning:** The encryption key is the only way to access your data. If you lose the key or use a different one later, you will not be able to read the existing database. Always store your keys in environment variables!
 
 ### 2. Creating Tables (Required)
-#### `db.create(tableName: string, columns: string[])`
-You **must** create a table before you can insert any data. This defines the structure and prevents unauthorized table access.
+#### `db.create(tableName: string, columns: object | string, autoincrement?: boolean)`
+You **must** create a table before you can insert any data. This defines the structure, column types, and ID generation strategy.
+
+**Option A: Using an Object (Recommended)**
+Define columns and their types using a JSON object.
 
 ```typescript
-// Example: db.create('users', ['username', 'email', 'role', 'active'])
-db.create('users', ['username', 'email', 'role', 'active']);
+// Example: db.create('users', { username: 'string', email: 'string', active: 'boolean' })
+db.create('users', {
+    username: 'string',
+    email: 'string',
+    role: 'string',
+    active: 'boolean'
+});
 ```
+
+**Option B: Using a String Format**
+A convenient shorthand for defining columns and types.
+
+```typescript
+// Example: db.create('users', "username = string, email = string, age = int")
+db.create('users', "username = string, email = string, role = string, active = boolean");
+```
+
+**Column Type Rules:**
+- **Supported Types:** `string`, `number` (or `int`), `boolean`, `null`.
+- **ID Column:** By default, an `id` column is added as a `number` (incremental). To use a random string ID, define `id: 'string'`.
+- **Autoincrement:** The third parameter (default: `true`) controls if numeric IDs should automatically increment.
 
 ### 3. Inserting Data
 #### `db.insert(tableName: string, data: object | string, options?: insertOptions)`
@@ -113,17 +134,17 @@ db.insert('users', "username = mpop, role = admin, active = true");
 - **Separators:** Separate fields with a comma (`,`).
 
 #### ID Generation Strategies
-Control how IDs are generated via the `options` parameter.
+Control how IDs are generated via the `options` parameter or table structure.
 
 ```typescript
-// Incremental ID: 1, 2, 3... (Default)
-db.insert('logs', { event: 'startup' }, { increment: true });
+// Incremental ID: 1, 2, 3... (Default if 'id' type is 'number')
+db.insert('logs', { event: 'startup' });
 
-// Random 12-character alphanumeric ID
-db.insert('sessions', { token: 'xyz123' }, { increment: false });
+// Random 12-character alphanumeric ID (Default if 'id' type is 'string')
+db.insert('sessions', { token: 'xyz123' });
 
-// Random ID with custom length (minimum 6)
-db.insert('tokens', { value: 'abc' }, { increment: false, idLength: 16 });
+// Custom ID length for string-based IDs
+db.insert('tokens', { value: 'abc' }, { idLength: 16 });
 ```
 
 ### 4. Reading Data
@@ -164,18 +185,18 @@ console.log(status.message); // "Deleted successfully"
 ```
 
 ### 7. Altering Tables
-#### `db.alter(tableName: string, newColumns?: string[], deleteColumns?: string[])`
-Modify the structure of an existing table. You can add new columns or remove existing ones.
+#### `db.alter(tableName: string, newColumns?: object | string, deleteColumns?: string[])`
+Modify the structure of an existing table. You can add new columns with types or remove existing ones.
 
 ```typescript
 // Add new columns to the 'users' table
-db.alter('users', ['age', 'gender']);
+db.alter('users', { age: 'number', gender: 'string' });
+
+// Using string format
+db.alter('users', "address = string");
 
 // Remove columns from the 'users' table
 db.alter('users', undefined, ['role']);
-
-// Add and remove columns simultaneously
-db.alter('users', ['address'], ['active']);
 ```
 
 ## Data Structure
@@ -185,11 +206,20 @@ The internal structure of the database follows a hierarchical JSON format:
 ```json
 {
   "table_struct": {
-    "users": ["username", "email", "role", "active", "id"]
+    "users": {
+        "username": "string",
+        "email": "string",
+        "role": "string",
+        "active": "boolean",
+        "id": "number"
+    }
   },
   "users": {
     "1": {
       "username": "ryannkim",
+      "email": "ryann@example.com",
+      "role": "developer",
+      "active": true,
       "id": 1
     }
   }

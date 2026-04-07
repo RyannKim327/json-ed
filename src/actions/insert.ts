@@ -13,7 +13,6 @@ export default function insert_data(filename: string, key: string, cache: main_s
 	}
 
 	return (table: string, data: string | data_structure, opts?: insertOptions) => {
-		let incremental = true
 		let limit = 12
 
 		table = table.toLowerCase()
@@ -41,10 +40,6 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		// return {}
 
 		if (opts !== undefined) {
-			if (opts?.increment !== undefined) {
-				incremental = opts.increment
-			}
-
 			if (opts?.idLength !== undefined) {
 				if (opts?.idLength > 5) {
 					limit = opts.idLength
@@ -53,30 +48,30 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		}
 
 		let id: string | number = 1
-
-		// TODO: For ID auto generator
-		const keys = Object.keys(cache[table])
-		if (incremental && keys.length > 0) {
+		if (cache["table_struct"][table]["id"] === "number") {
 			const keys = Object.keys(cache[table])
-			id = keys[keys.length - 1]
-			if (typeof (id) === "number") {
-				id++
-			} else {
-				try {
-					id = parseInt(id)
+			if (keys.length > 0) {
+				id = keys[keys.length - 1]
+				if (typeof (id) === "number") {
 					id++
-				} catch (e) {
-					throw new Error("ID can't be parse to numbers")
+				} else {
+					try {
+						id = parseInt(id)
+						id++
+					} catch (e) {
+						throw new Error("ID can't be parse to numbers")
+					}
 				}
 			}
-		} else if (!incremental && cache[table] !== undefined) {
-			const keys = Object.keys(cache[table])
+		} else {
+			// TODO: This is to make the id auto generate if it is not number in type
 			id = idGenerator(limit)
-			while (keys.includes(id)) {
+			const ids = Object.keys(cache[table])
+
+			// TODO: To prevent ID Duplication
+			while (ids.includes(id)) {
 				id = idGenerator(limit)
 			}
-		} else if (!incremental) {
-			id = idGenerator(limit)
 		}
 
 		cache[table][id] = {

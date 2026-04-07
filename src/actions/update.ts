@@ -38,7 +38,7 @@ export default function update_data(filename: string, key: string, cache: main_s
 		data = sanitizingData(table, data, cache)
 
 		// TODO: This function is to force to use only allowed keys
-		if (!cache[table][id]) {
+		if (cache[table][id] === undefined) {
 			cache[table][id] = {}
 		}
 
@@ -47,8 +47,7 @@ export default function update_data(filename: string, key: string, cache: main_s
 			const keys = Object.keys(cache["table_struct"][table])
 			if (keys.includes(key)) {
 				if (!Array.isArray(cache[table][id])) {
-					(cache[table][id] as Record<string, unknown>)[key] =
-						(data as Record<string, unknown>)[key]
+					cache[table][id][key] = data[key]
 				}
 			}
 		})

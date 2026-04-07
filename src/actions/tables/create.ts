@@ -3,17 +3,25 @@
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */
 
-import { main_structure } from "../../interface";
+import { main_structure, table_struct } from "../../interface";
 import { read, save } from "../../middlewares/data_control";
-import { c } from "../../utils";
+import { c, tableValidator } from "../../utils";
 
 export default function createTable(filename: string, key: string, cache: main_structure) {
-	return (table: string, columns: string[]) => {
+	return (table: string, columns: table_struct | string, autoincrement?: boolean) => {
 		table = table.toLowerCase()
 
 		// TODO: Anti destroy reserve table
 		if (table === "table_struct") {
 			throw new Error("Cannot access reserved table: table_struct");
+		}
+
+		if (autoincrement === undefined) {
+			autoincrement = true
+		}
+
+		if (typeof columns === "string") {
+			columns = tableValidator(columns)
 		}
 
 		if (Object.keys(cache).length === 0) {
@@ -29,13 +37,14 @@ export default function createTable(filename: string, key: string, cache: main_s
 		// TODO: Clearing cache table
 		cache[table] = {}
 
-		// TODO: To make all columns in lowercase
-		for (let i = 0; i < columns.length; i++) {
-			columns[i] = columns[i].toLowerCase()
+		const allowedIdType = ["string", "number", "int"]
+
+		if (columns["id"] === undefined) {
+			columns["id"] = "number"
 		}
 
-		if (!columns.includes("id")) {
-			columns.push("id")
+		if (!allowedIdType.includes(columns["id"])) {
+			throw new Error("ID only requires string or number/int datatype")
 		}
 
 		cache["table_struct"][table] = columns
