@@ -3,12 +3,12 @@
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */
 
-import { data_structure, main_structure } from "../../interface";
+import { main_structure, table_struct } from "../../interface";
 import { read, save } from "../../middlewares/data_control";
-import { c, stringToJson } from "../../utils";
+import { c, tableValidator } from "../../utils";
 
 export default function createTable(filename: string, key: string, cache: main_structure) {
-	return (table: string, columns: data_structure | string, autoincrement?: boolean) => {
+	return (table: string, columns: table_struct | string, autoincrement?: boolean) => {
 		table = table.toLowerCase()
 
 		// TODO: Anti destroy reserve table
@@ -21,7 +21,7 @@ export default function createTable(filename: string, key: string, cache: main_s
 		}
 
 		if (typeof columns === "string") {
-			columns = stringToJson(columns)
+			columns = tableValidator(columns) as table_struct
 		}
 
 		if (Object.keys(cache).length === 0) {
@@ -37,8 +37,14 @@ export default function createTable(filename: string, key: string, cache: main_s
 		// TODO: Clearing cache table
 		cache[table] = {}
 
+		const allowedIdType = ["string", "number", "int"]
+
 		if (columns["id"] === undefined) {
 			columns["id"] = "number"
+		}
+
+		if (!allowedIdType.includes(columns["id"])) {
+			throw new Error("ID only requires string or number/int datatype")
 		}
 
 		cache["table_struct"][table] = columns

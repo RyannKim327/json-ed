@@ -3,13 +3,13 @@
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */
 
-import { data_structure, main_structure } from "../../interface";
+import { main_structure, table_struct } from "../../interface";
 import { save } from "../../middlewares/data_control";
-import { stringToJson } from "../../utils";
+import { tableValidator } from "../../utils";
 
 export default function alter(filename: string, key: string, cache: main_structure) {
 
-	return (table: string, newCol?: string | data_structure, deleteCol?: string[]) => {
+	return (table: string, newCol?: string | table_struct, deleteCol?: string[]) => {
 		// TODO: Development soon, but I already have an idea, I need to figure it out first
 		table = table.toLowerCase()
 		const reservedTable = "table_struct"
@@ -22,10 +22,11 @@ export default function alter(filename: string, key: string, cache: main_structu
 			throw new Error("The table is not existed")
 		}
 
-		const current = cache[reservedTable]?.[table];
+		// FIX: Type error
+		const current: table_struct = cache[reservedTable]?.[table];
 
 		if (Array.isArray(current)) {
-			let updated: data_structure = current;
+			let updated: table_struct = current;
 
 			if (deleteCol !== undefined) {
 				for (const key of Object.keys(updated)) {
@@ -37,7 +38,7 @@ export default function alter(filename: string, key: string, cache: main_structu
 
 			if (newCol !== undefined) {
 				if (typeof newCol === "string") {
-					newCol = stringToJson(newCol)
+					newCol = tableValidator(newCol)
 				}
 
 				updated = {
