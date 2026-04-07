@@ -3,6 +3,9 @@ import { data_structure } from "./interface"
 export function c(from: string, status: string, message: string) {
 	status = status.toLowerCase()
 	let color = 36;
+	if (status === "") {
+		status = "l"
+	}
 	status = status[0].toLowerCase();
 	switch (status) {
 		case "w":
