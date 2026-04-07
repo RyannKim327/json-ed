@@ -21,7 +21,7 @@ export default function createTable(filename: string, key: string, cache: main_s
 		}
 
 		if (typeof columns === "string") {
-			columns = tableValidator(columns) as table_struct
+			columns = tableValidator(columns)
 		}
 
 		if (Object.keys(cache).length === 0) {

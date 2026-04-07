@@ -38,7 +38,7 @@ export default function update_data(filename: string, key: string, cache: main_s
 		data = sanitizingData(table, data, cache)
 
 		// TODO: This function is to force to use only allowed keys
-		if (!cache[table][id]) {
+		if (cache[table][id] === undefined) {
 			cache[table][id] = {}
 		}
 
