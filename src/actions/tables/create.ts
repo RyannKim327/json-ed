@@ -5,6 +5,7 @@
 
 import { main_structure } from "../../interface";
 import { read, save } from "../../middlewares/data_control";
+import { c } from "../../utils";
 
 export default function createTable(filename: string, key: string, cache: main_structure) {
 	return (table: string, columns: string[]) => {
@@ -21,7 +22,8 @@ export default function createTable(filename: string, key: string, cache: main_s
 
 		// TODO: To prevent overwrite of the table
 		if (cache[table] !== undefined) {
-			return { "message": "Table is already existed" }
+			c("Create Table", "e", "Table is already existed")
+			return
 		}
 
 		// TODO: Clearing cache table

@@ -5,6 +5,7 @@
 
 import { main_structure } from "../interface";
 import { read } from "../middlewares/data_control";
+import { c } from "../utils";
 
 export default function read_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -24,7 +25,8 @@ export default function read_data(filename: string, key: string, cache: main_str
 		}
 
 		if (cache[table][id] === undefined) {
-			return { "error": `No data found related to ID: ${id}` }
+			c("Read Data", "e", `No data found related to ID: ${id}`)
+			return
 		}
 
 		return cache[table][id]

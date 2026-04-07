@@ -6,7 +6,7 @@
 import { data_structure, main_structure } from "../interface";
 import { read, save } from "../middlewares/data_control";
 import sanitizingData from "../middlewares/sanitize";
-import { stringToJson, toLowerCaseKeys } from "../utils";
+import { c, stringToJson, toLowerCaseKeys } from "../utils";
 
 export default function update_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -30,7 +30,8 @@ export default function update_data(filename: string, key: string, cache: main_s
 		}
 
 		if (cache[table][id] === undefined) {
-			throw new Error(`Data with id: ${id} is undefined`)
+			c("Update Data", "e", `Data with id: ${id} is undefined`)
+			return
 		}
 
 		data = toLowerCaseKeys(data)
