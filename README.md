@@ -204,10 +204,11 @@ Contributions are welcome! To maintain a clean and manageable history, please us
 
 - `feat:` for new features
 - `fix:` for bug fixes
-- `docs:` for documentation changes
+- `docs:` or `doc:` for documentation changes
 - `style:` for formatting, missing semi colons, etc.
 - `refactor:` for refactoring production code
 - `test:` for adding missing tests
+
 - `chore:` for updating build tasks, package manager configs, etc.
 
 Example: `feat: add support for custom primary keys`
