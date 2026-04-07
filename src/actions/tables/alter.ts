@@ -16,6 +16,11 @@ export default function alter(filename: string, key: string, cache: main_structu
 		if (table === "table_struct") {
 			throw new Error("Cannot access reserved table: table_struct");
 		}
+
+		if (cache[reservedTable][table] === undefined) {
+			throw new Error("The table is not existed")
+		}
+
 		const current = cache[reservedTable]?.[table];
 
 		if (Array.isArray(current)) {

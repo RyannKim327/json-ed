@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 <!-- NOTE: Only the developer is allowed to change the version number, but suggestions for updates are always welcome. -->
 
+## [0.0.1-beta.1] - 2026-04-07
+- **rebrand:** Rebranded package from `json-ed` to `ormyx`.
+- **doc:** Fixed documentation bugs and updated "How To" instructions.
+
 ## [0.0.1-beta] - 2026-04-07
 - **feat:** Added console errors, logs, and warnings.
 - **feat:** Added `alter` table functionality.

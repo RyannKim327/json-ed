@@ -1,18 +1,18 @@
 {
-  "name": "json-edb",
-  "version": "0.0.1-beta.3",
+  "name": "ormyx",
+  "version": "0.0.1-beta.1",
   "description": "A ORM-Based program for making JSON a relational-like database",
   "keywords": [
     "orm",
     "json-orm"
   ],
-  "homepage": "https://github.com/RyannKim327/json-ed#readme",
+  "homepage": "https://github.com/RyannKim327/ormyx#readme",
   "bugs": {
-    "url": "https://github.com/RyannKim327/json-ed/issues"
+    "url": "https://github.com/RyannKim327/ormyx/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RyannKim327/json-ed.git"
+    "url": "git+https://github.com/RyannKim327/ormyx.git"
   },
   "license": "MIT",
   "author": "RyannKim327",

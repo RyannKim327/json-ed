@@ -1,4 +1,5 @@
-/* INFO: JsonED or basically named as JSON Encrypted Database is a program developed to make an ORM like program
+/* INFO: ORMYX or basically named as vokes ORM (Object-Relational Mapping) + “mix” (the idea of relational JSON mixing).
+ * It is a program developed to make an ORM like program
  * This was created and initiated on 04-05-26 with purely typescript.
  *
  * Author: Ryann Kim M. Sesgundo
@@ -14,7 +15,7 @@ import delete_data from "./actions/delete";
 import create_table from "./actions/tables/create";
 import alter_table from "./actions/tables/alter";
 
-export function JsonED(key: string, filename?: string) {
+export function ormyx(key: string, filename?: string) {
 	// TODO: To create a default name if it is blank
 	if (filename === undefined) {
 		filename = "data"

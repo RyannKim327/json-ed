@@ -1,6 +1,6 @@
 # License
 
-Copyright (c) 2026 Ryann Kim M. Sesgundo
+Copyright (c) 2026 Ryann Kim M. Sesgundo (Ormyx)
 
 ## Disclaimer: Use At Your Own Risk
 
