@@ -1,6 +1,6 @@
 {
-  "name": "json-ed",
-  "version": "0.0.1",
+  "name": "json-edb",
+  "version": "0.0.1-beta.1",
   "description": "A ORM-Based program for making JSON a relational-like database",
   "keywords": [
     "orm",

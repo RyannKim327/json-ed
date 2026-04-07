@@ -2,8 +2,9 @@
 ### MPOP Reverse II [Ryann Kim M. Sesgundo]
 
 [![wakatime](https://wakatime.com/badge/user/61954829-dd88-47de-8b67-7d673663ea1c/project/60a5ecd1-86d9-48f9-9ce9-abadb9470de2.svg)](https://wakatime.com/badge/user/61954829-dd88-47de-8b67-7d673663ea1c/project/60a5ecd1-86d9-48f9-9ce9-abadb9470de2)
+[![npm version](https://img.shields.io/npm/v/json-ed.svg)](https://www.npmjs.com/package/json-ed)
 
-**JsonED** is a TypeScript-based ORM-like library designed to manage JSON data as a relational-like database with built-in encryption. It simplifies data persistence by providing a structured way to handle tables, rows, and automatic ID generation while keeping your data secure.
+**JsonED** is a TypeScript-based ORM-like library (currently in beta) designed to manage JSON data as a relational-like database with built-in encryption. It simplifies data persistence by providing a structured way to handle tables, rows, and automatic ID generation while keeping your data secure.
 
 ## Note
 > I don't recommend using this for large-scale projects; it's best suited for small projects, prototypes, or hobbies. This was created for fun and as a way to expand my ideas and knowledge.
@@ -13,11 +14,12 @@
 - [Installation](#installation)
 - [How To](#how-to)
   - [1. Initialization](#1-initialization)
-  - [2. Creating Tables (Optional)](#2-creating-tables-optional)
+  - [2. Creating Tables (Required)](#2-creating-tables-required)
   - [3. Inserting Data](#3-inserting-data)
   - [4. Reading Data](#4-reading-data)
   - [5. Updating Data](#5-updating-data)
   - [6. Deleting Data](#6-deleting-data)
+  - [7. Altering Tables](#7-altering-tables)
 - [Data Structure](#data-structure)
 - [How it Works](#how-it-works)
 - [Security Best Practices](#security-best-practices)
@@ -35,7 +37,7 @@
 ## Installation
 
 ```bash
-npm install json-ed
+npm install json-edb
 ```
 
 ## How To
@@ -159,6 +161,21 @@ Remove a specific record from a table.
 ```typescript
 // Example: db.remove('users', 1)
 const status = db.remove('users', 1);
+```
+
+### 7. Altering Tables
+#### `db.alter(tableName: string, newColumns?: string[], deleteColumns?: string[])`
+Modify the structure of an existing table. You can add new columns or remove existing ones.
+
+```typescript
+// Add new columns to the 'users' table
+db.alter('users', ['age', 'gender']);
+
+// Remove columns from the 'users' table
+db.alter('users', undefined, ['role']);
+
+// Add and remove columns simultaneously
+db.alter('users', ['address'], ['active']);
 ```
 
 ## Data Structure
