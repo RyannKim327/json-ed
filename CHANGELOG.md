@@ -5,13 +5,18 @@ All notable changes to this project will be documented in this file.
 <!-- NOTE: Only the developer is allowed to change the version number, but suggestions for updates are always welcome. -->
 
 ## [0.0.1-beta.2] - 2026-04-08
+- **feat:** Added data filtering to prevent unwanted data injection and ensure type safety.
 - **feat:** Enhanced `db.create` to support typed columns using objects or string formats.
 - **feat:** Added `autoincrement` option to `db.create`.
 - **feat:** Support for custom ID types (`number` for incremental, `string` for random) via table structure.
+- **fix:** Fixed bug where numeric `0` and boolean `false` values were being ignored.
+- **fix:** Resolved column case mismatch issues during table structure definition.
 - **fix:** Updated documentation to reflect current object-based `table_struct` format.
 - **fix:** Improved table structure validation and column type mapping.
 - **fix:** Fixed `db.alter` to work with the new object-based table structure.
 - **fix:** Fixed `db.update` and `sanitizingData` to correctly preserve and validate data columns.
+- **refactor:** Improved internal type handling for default values.
+- **test:** Added comprehensive tests for data insertion.
 
 ## [0.0.1-beta.1] - 2026-04-07
 - **rebrand:** Rebranded package from `json-ed` to `ormyx`.

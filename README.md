@@ -1,4 +1,4 @@
-# Ormyx (JSON-based Relational Database)
+# Ormyx (JSON-based Relational Database) v0.0.1-beta.2
 ### MPOP Reverse II [Ryann Kim M. Sesgundo]
 
 [![wakatime](https://wakatime.com/badge/user/61954829-dd88-47de-8b67-7d673663ea1c/project/60a5ecd1-86d9-48f9-9ce9-abadb9470de2.svg)](https://wakatime.com/badge/user/61954829-dd88-47de-8b67-7d673663ea1c/project/60a5ecd1-86d9-48f9-9ce9-abadb9470de2)
@@ -30,6 +30,7 @@
 
 - **Relational Structure:** Organize your JSON data into tables and records.
 - **Built-in Encryption:** Uses `json-enc-dec` to keep your database files secure.
+- **Data Filtering & Type Safety:** Automatically sanitizes input and enforces column types to prevent unwanted data injection.
 - **Auto ID Generation:** Support for both random 12-character strings and incremental numeric IDs.
 - **Flexible Data Insertion:** Support for both JSON objects and easy-to-use string formats.
 - **TypeScript Support:** Fully typed for an enhanced developer experience.
