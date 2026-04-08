@@ -96,7 +96,7 @@ export function dataFilter(
 		[typeof 0]: 0,
 		[typeof null]: null
 	}
-	const result: data_structure = {};
+	let result: data_structure = {};
 
 	keys.forEach((key) => {
 		const value = data[key];

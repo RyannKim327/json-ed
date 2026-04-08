@@ -3,7 +3,7 @@
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */
 
-import { data_structure, main_structure, table_base, table_struct } from "../../interface";
+import { main_structure, table_struct } from "../../interface";
 import { save } from "../../middlewares/data_control";
 import { tableValidator } from "../../utils";
 
@@ -22,11 +22,8 @@ export default function alter(filename: string, key: string, cache: main_structu
 			throw new Error("The table is not existed")
 		}
 
-		// FIX: Type error
-		let current: table_struct | data_structure = cache[reservedTable]?.[table];
-
-		// Backward compatibility for old array-based structure
-		let updated = current;
+		// TODO: To solve type error
+		let current: table_struct = cache[reservedTable]?.[table] as table_struct;
 
 		if (deleteCol !== undefined) {
 			deleteCol.forEach((k) => {
@@ -37,13 +34,16 @@ export default function alter(filename: string, key: string, cache: main_structu
 		}
 
 		if (newCol !== undefined) {
-			updated = {
-				...updated,
-				...newCol as table_struct
+			if (typeof newCol === "string") {
+				newCol = tableValidator(newCol)
+			}
+			current = {
+				...current,
+				...newCol
 			}
 		}
 
-		cache[reservedTable][table] = updated;
+		cache[reservedTable][table] = current;
 		save(filename, key, cache);
 		return cache
 	}
