@@ -56,7 +56,7 @@ export function toLowerCaseKeys(data: data_structure) {
 export function parseValue(raw: string): string | number | boolean | null {
 	const value = raw.trim();
 	if (value === undefined) return null
-	if (value === null) return null
+	if (value.toLowerCase() == null) return null
 	if (value === "") return ""
 
 	if (value === "true") return true;
@@ -94,13 +94,14 @@ export function dataFilter(
 
 	keys.forEach((key) => {
 		const value = data[key];
-
-		if (value === undefined) {
-			result[key] = null;
-		} else if (typeof value === tbls[key]) {
-			result[key] = value;
+		if (data[key]) {
+			if (typeof value === tbls[key]) {
+				result[key] = value ?? null;
+			} else {
+				result[key] = null
+			}
 		} else {
-			result[key] = null;
+			result[key] = null
 		}
 	});
 
