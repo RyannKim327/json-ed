@@ -28,7 +28,9 @@ export default function alter(filename: string, key: string, cache: main_structu
 		if (deleteCol !== undefined) {
 			deleteCol.forEach((k) => {
 				if (current[k] !== undefined) {
-					delete current[k]
+					if (k !== "id") {
+						delete current[k]
+					}
 				}
 			})
 		}
@@ -37,6 +39,8 @@ export default function alter(filename: string, key: string, cache: main_structu
 			if (typeof newCol === "string") {
 				newCol = tableValidator(newCol)
 			}
+			if (newCol["id"]) delete newCol["id"]
+
 			current = {
 				...current,
 				...newCol

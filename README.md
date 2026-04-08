@@ -48,13 +48,16 @@ npm install ormyx
 To get started, you need to initialize **Ormyx** with a secret encryption key. If the database file does not exist, it will be created automatically.
 
 **Option A: Providing a Custom Filename**
-You can specify a name for your database. The `.dat` extension will be added automatically if you don't provide it.
+You can specify a name for your database. Filenames are automatically sanitized (only the base name is kept) and the `.dat` extension is added if missing.
 
 ```typescript
 import { ormyx } from 'ormyx';
 
 // This creates/loads 'my-database.dat'
 const db = ormyx('your-secret-key', 'my-database');
+
+// 'my.db.json' will be sanitized to 'my.dat'
+const db2 = ormyx('your-secret-key', 'my.db.json');
 ```
 
 **Option B: Using the Default Filename (Optional)**

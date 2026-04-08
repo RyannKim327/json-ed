@@ -4,63 +4,45 @@ All notable changes to this project will be documented in this file.
 
 <!-- NOTE: Only the developer is allowed to change the version number, but suggestions for updates are always welcome. -->
 
-## [0.0.1-beta.2] - 2026-04-08
-- **feat:** Added data filtering to prevent unwanted data injection and ensure type safety.
-- **feat:** Enhanced `db.create` to support typed columns using objects or string formats.
-- **feat:** Added `autoincrement` option to `db.create`.
-- **feat:** Support for custom ID types (`number` for incremental, `string` for random) via table structure.
-- **fix:** Fixed bug where numeric `0` and boolean `false` values were being ignored.
-- **fix:** Resolved column case mismatch issues during table structure definition.
-- **fix:** Updated documentation to reflect current object-based `table_struct` format.
-- **fix:** Improved table structure validation and column type mapping.
-- **fix:** Fixed `db.alter` to work with the new object-based table structure.
-- **fix:** Fixed `db.update` and `sanitizingData` to correctly preserve and validate data columns.
-- **refactor:** Improved internal type handling for default values.
-- **test:** Added comprehensive tests for data insertion.
+## 2026-04-08
+### [0.0.1-beta.2]
+- **feat:** Added `dataFilter` middleware to ensure strict type safety and prevent unwanted data injection.
+- **feat:** Enhanced `db.create` to support both JSON objects and formatted strings for table structure definition.
+- **feat:** Added `autoincrement` support for numeric primary keys (default: `true`).
+- **feat:** Support for random 12-character string IDs by defining `id: 'string'` in table structure.
+- **fix:** Fixed `db.alter` to support adding new columns via both object and string formats, utilizing `tableValidator`.
+- **fix:** Resolved bug where `0` (numeric) and `false` (boolean) values were incorrectly ignored during filtering.
+- **fix:** Fixed `NaN` ID error on `db.insert` when using incremental numeric IDs.
+- **fix:** Improved table structure validation to resolve column case mismatch issues.
+- **fix:** Updated `db.update` and `sanitizingData` to correctly preserve and validate existing data columns.
+- **refactor:** Standardized internal type handling for default values across all operations.
+- **refactor:** Updated internal table structure to use objects instead of arrays for better performance and clarity.
+- **test:** Added comprehensive test suite for data insertion and validation.
+- **docs:** Updated `README.md` with detailed usage examples and documentation for new features.
 
-## [0.0.1-beta.1] - 2026-04-07
+## 2026-04-07
+### [0.0.1-beta.1]
 - **rebrand:** Rebranded package from `json-ed` to `ormyx`.
 - **doc:** Fixed documentation bugs and updated "How To" instructions.
 
-## [0.0.1-beta] - 2026-04-07
-- **feat:** Added console errors, logs, and warnings.
-- **feat:** Added `alter` table functionality.
-- **chore:** Initial work on `alter` and general updates.
-- **doc:** Updated documentation.
+### [0.0.1-beta]
+- **feat:** Added console logging for errors, warnings, and success messages.
+- **feat:** Added `db.alter` functionality for modifying existing table structures.
+- **doc:** Initial documentation update for the first beta release.
 - **release:** First beta release on npm.
 
-## [2026-04-06]
-- **feat:** Added options in `insert` for increment and ID length.
-- **feat:** Added `delete` functionality and made the key a required parameter.
-- **feat:** Included `remove` as an alias for the `delete` function.
-- **feat:** Added `create table` functionality.
-- **fix:** Made `insertOption` optional.
-- **fix:** Validated ID length to be non-negative or non-NaN.
-- **fix:** Resolved data undefined errors.
-- **fix:** Improved `read` to return objects.
-- **fix:** Added access control for reserved tables.
-- **fix:** Fixed create table persistence error.
-- **fix:** Improved update data validation and sanitization.
-- **refactor:** Code and documentation initiation.
-- **refactor:** Disabled auto-creation of tables.
-- **refactor:** Forced lowercase keys.
-- **doc:** Updated tutorial and README with special notes for table creation.
+## 2026-04-06
+- **feat:** Added options in `insert` for custom ID increment and length.
+- **feat:** Added `db.remove` functionality and alias support.
+- **feat:** Added `db.create` table functionality.
+- **fix:** Improved `db.read` to return structured objects.
+- **fix:** Implemented access control for reserved system tables.
+- **refactor:** Enforced lowercase keys for consistency across the database.
+- **doc:** Added detailed tutorial and notes for table creation in `README.md`.
 
-## [2026-04-05]
+## 2026-04-05
 - **Initial Commit:** Project initiation.
-- **feat:** Added "no table found" error handling.
-- **feat:** Added string-based query support.
-- **feat:** Added query filter and checker.
-- **feat:** Added `update` functionality (initially under testing).
-- **fix:** Fixed save and read operations.
-- **fix:** Corrected directory structure.
-- **fix:** Fixed cache storage bug.
-- **fix:** Resolved error where empty values became 0.
-- **fix:** Fixed comma data parsing error.
-- **fix:** Improved error returns.
-- **fix:** Fixed spaced key error.
-- **fix:** Added preventive measurements.
-- **doc:** Initially added README and License.
-- **doc:** Updated README and tutorial.
-- **chore:** Added `tsconfig.json`.
-- **chore:** Updated dependencies.
+- **feat:** Basic CRUD operations (insert, read, update, delete).
+- **feat:** String-based query support and filtering.
+- **fix:** Resolved various issues with data persistence and parsing.
+- **chore:** Project configuration (tsconfig, dependencies).

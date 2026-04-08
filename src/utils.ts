@@ -118,15 +118,15 @@ export function dataFilter(
 }
 
 export function tableValidator(data: string) {
-	const pattern = /([\s\w]+)\s*=\s*(?:'([^']*)'|"([^"]*)"|([^,]*))/gi
+	const pattern = /(\w+)\s*=\s*(?:'([^']*)'|"([^"]*)"|([^,]+))/gi;
 	const temp: table_struct = {}
 	let match;
 
-	const types = ["string", "number", "boolean", "null", "int"]
+	const types = ["string", "number", "boolean", "int"]
 
 	while ((match = pattern.exec(data)) !== null) {
 		const key = match[1].replace(/\s/gi, "").trim().toLowerCase();
-		let valueRaw = match[2] ?? match[3] ?? match[4];
+		let valueRaw = match[2];
 		if (valueRaw !== null) {
 			if (types.includes(valueRaw)) {
 				if (valueRaw === "int") {
