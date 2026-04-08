@@ -3,7 +3,7 @@
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */
 
-import { data_structure, main_structure, table_base, table_struct } from "../../interface";
+import { main_structure, table_struct } from "../../interface";
 import { save } from "../../middlewares/data_control";
 import { tableValidator } from "../../utils";
 
@@ -22,48 +22,33 @@ export default function alter(filename: string, key: string, cache: main_structu
 			throw new Error("The table is not existed")
 		}
 
-		// FIX: Type error
-		let current: table_struct | data_structure = cache[reservedTable]?.[table];
+		// TODO: To solve type error
+		let current: table_struct = cache[reservedTable]?.[table] as table_struct;
 
-		if (Array.isArray(current)) {
-			// Backward compatibility for old array-based structure
-			let updated: string[] = current;
-
-			if (deleteCol !== undefined) {
-				updated = updated.filter(col => !deleteCol.includes(col));
-			}
-
-			if (newCol !== undefined) {
-				const newCols = typeof newCol === "string" ? Object.keys(tableValidator(newCol)) : Object.keys(newCol);
-				updated = [...new Set([...updated, ...newCols])];
-			}
-
-			cache[reservedTable][table] = updated;
-			save(filename, key, cache)
-		} else if (typeof current === "object" && current !== null) {
-			// New object-based structure
-			let updated: table_struct = { ...current as table_struct };
-
-			if (deleteCol !== undefined) {
-				deleteCol.forEach(col => {
-					delete updated[col];
-				});
-			}
-
-			if (newCol !== undefined) {
-				if (typeof newCol === "string") {
-					newCol = tableValidator(newCol);
+		if (deleteCol !== undefined) {
+			deleteCol.forEach((k) => {
+				if (current[k] !== undefined) {
+					if (k !== "id") {
+						delete current[k]
+					}
 				}
-				updated = {
-					...updated,
-					...newCol
-				};
-			}
-
-			cache[reservedTable][table] = updated;
-			save(filename, key, cache);
+			})
 		}
 
+		if (newCol !== undefined) {
+			if (typeof newCol === "string") {
+				newCol = tableValidator(newCol)
+			}
+			if (newCol["id"]) delete newCol["id"]
+
+			current = {
+				...current,
+				...newCol
+			}
+		}
+
+		cache[reservedTable][table] = current;
+		save(filename, key, cache);
 		return cache
 	}
 }

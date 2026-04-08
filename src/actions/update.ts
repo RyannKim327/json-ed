@@ -6,7 +6,7 @@
 import { data_structure, main_structure } from "../interface";
 import { read, save } from "../middlewares/data_control";
 import sanitizingData from "../middlewares/sanitize";
-import { c, stringToJson, toLowerCaseKeys } from "../utils";
+import { c, dataFilter, stringToJson, toLowerCaseKeys } from "../utils";
 
 export default function update_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -51,6 +51,8 @@ export default function update_data(filename: string, key: string, cache: main_s
 				}
 			}
 		})
+
+		cache[table][id] = dataFilter(table, cache[table][id], cache)
 
 		save(filename, key, cache)
 		return cache[table][id]

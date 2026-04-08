@@ -5,7 +5,7 @@
 
 import { data_structure, insertOptions, main_structure } from "../interface";
 import { read, save } from "../middlewares/data_control";
-import { idGenerator, stringToJson, toLowerCaseKeys } from "../utils";
+import { dataFilter, idGenerator, stringToJson, toLowerCaseKeys } from "../utils";
 
 export default function insert_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -46,6 +46,8 @@ export default function insert_data(filename: string, key: string, cache: main_s
 				}
 			}
 		}
+
+		data = dataFilter(table, data, cache)
 
 		let id: string | number = 1
 		if (cache["table_struct"][table]["id"] === "number") {

@@ -1,4 +1,4 @@
-# Ormyx (JSON-based Relational Database)
+# Ormyx (JSON-based Relational Database) v0.0.1-beta.2
 ### MPOP Reverse II [Ryann Kim M. Sesgundo]
 
 [![wakatime](https://wakatime.com/badge/user/61954829-dd88-47de-8b67-7d673663ea1c/project/60a5ecd1-86d9-48f9-9ce9-abadb9470de2.svg)](https://wakatime.com/badge/user/61954829-dd88-47de-8b67-7d673663ea1c/project/60a5ecd1-86d9-48f9-9ce9-abadb9470de2)
@@ -30,6 +30,7 @@
 
 - **Relational Structure:** Organize your JSON data into tables and records.
 - **Built-in Encryption:** Uses `json-enc-dec` to keep your database files secure.
+- **Data Filtering & Type Safety:** Automatically sanitizes input and enforces column types to prevent unwanted data injection.
 - **Auto ID Generation:** Support for both random 12-character strings and incremental numeric IDs.
 - **Flexible Data Insertion:** Support for both JSON objects and easy-to-use string formats.
 - **TypeScript Support:** Fully typed for an enhanced developer experience.
@@ -47,13 +48,16 @@ npm install ormyx
 To get started, you need to initialize **Ormyx** with a secret encryption key. If the database file does not exist, it will be created automatically.
 
 **Option A: Providing a Custom Filename**
-You can specify a name for your database. The `.dat` extension will be added automatically if you don't provide it.
+You can specify a name for your database. Filenames are automatically sanitized (only the base name is kept) and the `.dat` extension is added if missing.
 
 ```typescript
 import { ormyx } from 'ormyx';
 
 // This creates/loads 'my-database.dat'
 const db = ormyx('your-secret-key', 'my-database');
+
+// 'my.db.json' will be sanitized to 'my.dat'
+const db2 = ormyx('your-secret-key', 'my.db.json');
 ```
 
 **Option B: Using the Default Filename (Optional)**

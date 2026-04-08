@@ -22,6 +22,9 @@
     "build": "tsc",
     "test": "tsx test"
   },
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "json-enc-dec": "^0.1.2"
   },
