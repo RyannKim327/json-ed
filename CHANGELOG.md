@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 <!-- NOTE: Only the developer is allowed to change the version number, but suggestions for updates are always welcome. -->
 
+## 2026-04-09
+### [0.0.4-test.1]
+- **feat:** Added `filter` functionality to search data in a table by key-value pairs.
+- **feat:** Added `rename` functionality to rename an existing table (structure and data).
+- **fix:** Added table name validation to `create` and `rename` to only allow alphabets and underscores.
+- **fix:** Improved cache initialization in `create`, `alter`, `filter`, and `rename` to ensure data is loaded if the cache is empty.
+- **refactor:** Organized the `ormyx` return object into `Data actions` and `Table actions` for better clarity.
+
 ## 2026-04-08
 ### [0.0.2]
 - **docs:** Updated documentation to clarify supported table datatypes (`string`, `number`, `int`, `boolean`).

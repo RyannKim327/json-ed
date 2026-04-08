@@ -17,15 +17,16 @@
   - [2. Creating Tables (Required)](#2-creating-tables-required)
   - [3. Inserting Data](#3-inserting-data)
   - [4. Reading Data](#4-reading-data)
-  - [5. Updating Data](#5-updating-data)
-  - [6. Deleting Data](#6-deleting-data)
-  - [7. Altering Tables](#7-altering-tables)
-- [Data Structure](#data-structure)
-- [How it Works](#how-it-works)
-- [Security Best Practices](#security-best-practices)
-- [Changelog](CHANGELOG.md)
-- [License](#license)
-
+  - [5. Filtering Data](#5-filtering-data)
+  - [6. Updating Data](#6-updating-data)
+  - [7. Deleting Data](#7-deleting-data)
+  - [8. Altering Tables](#8-altering-tables)
+  - [9. Renaming Tables](#9-renaming-tables)
+  - [Data Structure](#data-structure)
+  - [How it Works](#how-it-works)
+  - [Security Best Practices](#security-best-practices)
+  - [Changelog](CHANGELOG.md)
+  - [License](#license)
 ## Features
 
 - **Relational Structure:** Organize your JSON data into tables and records.
@@ -166,7 +167,20 @@ if (user) {
 }
 ```
 
-### 5. Updating Data
+### 5. Filtering Data
+#### `db.filter(tableName: string, query: object | string)`
+Search for data within a table that matches specific criteria.
+
+```typescript
+// Example: db.filter('users', { role: 'admin' })
+const admins = db.filter('users', { role: 'admin' });
+console.log('Admins found:', admins);
+
+// Using string format
+const activeUsers = db.filter('users', "active = true");
+```
+
+### 6. Updating Data
 #### `db.update(tableName: string, id: string | number, data: object | string)`
 Modify an existing record. New data is merged with the existing record.
 
@@ -178,7 +192,7 @@ db.update('users', 1, { active: false });
 db.update('users', 1, "role = administrator, active = true");
 ```
 
-### 6. Deleting Data
+### 7. Deleting Data
 #### `db.remove(tableName: string, id: string | number)`
 Remove a specific record from a table.
 
@@ -188,7 +202,7 @@ const status = db.remove('users', 1);
 console.log(status.message); // "Deleted successfully"
 ```
 
-### 7. Altering Tables
+### 8. Altering Tables
 #### `db.alter(tableName: string, newColumns?: object | string, deleteColumns?: string[])`
 Modify the structure of an existing table. You can add new columns with types or remove existing ones.
 
@@ -201,6 +215,16 @@ db.alter('users', "address = string");
 
 // Remove columns from the 'users' table
 db.alter('users', undefined, ['role']);
+```
+
+### 9. Renaming Tables
+#### `db.rename(oldTableName: string, newTableName: string)`
+Rename an existing table. This will preserve both the table structure and its data.
+
+```typescript
+// Example: db.rename('users', 'members')
+const result = db.rename('users', 'members');
+console.log(result.message); // "Table users is now renamed to members"
 ```
 
 ## Data Structure

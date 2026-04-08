@@ -4,11 +4,13 @@
  */
 
 import { main_structure, table_struct } from "../../interface";
-import { save } from "../../middlewares/data_control";
+import { read, save } from "../../middlewares/data_control";
 import { tableValidator } from "../../utils";
 
 export default function alter(filename: string, key: string, cache: main_structure) {
-
+	if (Object.keys(cache).length === 0) {
+		Object.assign(cache, read(filename, key))
+	}
 	return (table: string, newCol?: string | table_struct, deleteCol?: string[]) => {
 		// TODO: Development soon, but I already have an idea, I need to figure it out first
 		table = table.toLowerCase()
