@@ -100,6 +100,9 @@ export function dataFilter(
 
 	keys.forEach((key) => {
 		const value = data[key];
+		if (tbls[key] === "int") {
+			tbls[key] = "number"
+		}
 		if (data[key]) {
 			if (typeof value === tbls[key]) {
 				result[key] = value ?? (DEFAULTS[typeof (value)] ?? null);
