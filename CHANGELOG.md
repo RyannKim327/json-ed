@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ## 2026-04-08
 ### [0.0.2]
 - **docs:** Updated documentation to clarify supported table datatypes (`string`, `number`, `int`, `boolean`).
-- **chore:** Bumped version to 0.0.2.
+- **chore:** Bumped version to 0.0.3 (accidentally removed 0.0.2).
 
 ## 2026-04-08
 ### [0.0.1-beta.2]
