@@ -1,4 +1,4 @@
-import { data_structure, table_struct } from "./interface"
+import { data_structure, main_structure, table_struct } from "./interface"
 
 export function c(from: string, status: string, message: string) {
 	status = status.toLowerCase()
@@ -80,6 +80,31 @@ export function stringToJson(data: string) {
 	}
 
 	return temp
+}
+
+export function dataFilter(
+	table: string,
+	data: data_structure,
+	cache: main_structure
+) {
+	const tbls = cache["table_struct"][table];
+	const keys = Object.keys(tbls);
+
+	const result: data_structure = {};
+
+	keys.forEach((key) => {
+		const value = data[key];
+
+		if (value === undefined) {
+			result[key] = null;
+		} else if (typeof value === tbls[key]) {
+			result[key] = value;
+		} else {
+			result[key] = null;
+		}
+	});
+
+	return result;
 }
 
 export function tableValidator(data: string) {

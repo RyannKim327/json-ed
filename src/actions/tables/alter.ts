@@ -25,45 +25,26 @@ export default function alter(filename: string, key: string, cache: main_structu
 		// FIX: Type error
 		let current: table_struct | data_structure = cache[reservedTable]?.[table];
 
-		if (Array.isArray(current)) {
-			// Backward compatibility for old array-based structure
-			let updated: string[] = current;
+		// Backward compatibility for old array-based structure
+		let updated = current;
 
-			if (deleteCol !== undefined) {
-				updated = updated.filter(col => !deleteCol.includes(col));
-			}
-
-			if (newCol !== undefined) {
-				const newCols = typeof newCol === "string" ? Object.keys(tableValidator(newCol)) : Object.keys(newCol);
-				updated = [...new Set([...updated, ...newCols])];
-			}
-
-			cache[reservedTable][table] = updated;
-			save(filename, key, cache)
-		} else if (typeof current === "object" && current !== null) {
-			// New object-based structure
-			let updated: table_struct = { ...current as table_struct };
-
-			if (deleteCol !== undefined) {
-				deleteCol.forEach(col => {
-					delete updated[col];
-				});
-			}
-
-			if (newCol !== undefined) {
-				if (typeof newCol === "string") {
-					newCol = tableValidator(newCol);
+		if (deleteCol !== undefined) {
+			deleteCol.forEach((k) => {
+				if (current[k] !== undefined) {
+					delete current[k]
 				}
-				updated = {
-					...updated,
-					...newCol
-				};
-			}
-
-			cache[reservedTable][table] = updated;
-			save(filename, key, cache);
+			})
 		}
 
+		if (newCol !== undefined) {
+			updated = {
+				...updated,
+				...newCol as table_struct
+			}
+		}
+
+		cache[reservedTable][table] = updated;
+		save(filename, key, cache);
 		return cache
 	}
 }
