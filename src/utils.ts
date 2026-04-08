@@ -90,18 +90,24 @@ export function dataFilter(
 	const tbls = cache["table_struct"][table];
 	const keys = Object.keys(tbls);
 
+	const DEFAULTS: Record<string, string | number | boolean | null> = {
+		[typeof "text"]: "",
+		[typeof false]: false,
+		[typeof 0]: 0,
+		[typeof null]: null
+	}
 	const result: data_structure = {};
 
 	keys.forEach((key) => {
 		const value = data[key];
 		if (data[key]) {
 			if (typeof value === tbls[key]) {
-				result[key] = value ?? null;
+				result[key] = value ?? (DEFAULTS[typeof (value)] ?? null);
 			} else {
-				result[key] = null
+				result[key] = DEFAULTS[typeof (value)] ?? null
 			}
 		} else {
-			result[key] = null
+			result[key] = DEFAULTS[typeof (value)] ?? null
 		}
 	});
 
