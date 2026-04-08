@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 <!-- NOTE: Only the developer is allowed to change the version number, but suggestions for updates are always welcome. -->
 
 ## 2026-04-08
+### [0.0.2]
+- **docs:** Updated documentation to clarify supported table datatypes (`string`, `number`, `int`, `boolean`).
+- **chore:** Bumped version to 0.0.2.
+
+## 2026-04-08
 ### [0.0.1-beta.2]
 - **feat:** Added `dataFilter` middleware to ensure strict type safety and prevent unwanted data injection.
 - **feat:** Enhanced `db.create` to support both JSON objects and formatted strings for table structure definition.

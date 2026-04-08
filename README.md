@@ -98,8 +98,8 @@ db.create('users', "username = string, email = string, role = string, active = b
 ```
 
 **Column Type Rules:**
-- **Supported Types:** `string`, `number` (or `int`), `boolean`, `null`.
-- **ID Column:** By default, an `id` column is added as a `number` (incremental). To use a random string ID, define `id: 'string'`.
+- **Supported Types:** `string`, (`number` or `int`), `boolean`.
+- **ID Column:** By default, an `id` column is added as a `number` or `int` (incremental). To use a random string ID, define `id: 'string'`.
 - **Autoincrement:** The third parameter (default: `true`) controls if numeric IDs should automatically increment.
 
 ### 3. Inserting Data
