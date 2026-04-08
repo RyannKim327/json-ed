@@ -1,4 +1,4 @@
-# Ormyx (JSON-based Relational Database) v0.0.1-beta.2
+# Ormyx (JSON-based Relational Database)
 ### MPOP Reverse II [Ryann Kim M. Sesgundo]
 
 [![wakatime](https://wakatime.com/badge/user/61954829-dd88-47de-8b67-7d673663ea1c/project/60a5ecd1-86d9-48f9-9ce9-abadb9470de2.svg)](https://wakatime.com/badge/user/61954829-dd88-47de-8b67-7d673663ea1c/project/60a5ecd1-86d9-48f9-9ce9-abadb9470de2)

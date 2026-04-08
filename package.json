@@ -1,6 +1,6 @@
 {
   "name": "ormyx",
-  "version": "0.0.1-beta.2",
+  "version": "0.0.1",
   "description": "A ORM-Based program for making JSON a relational-like database",
   "keywords": [
     "orm",
