@@ -118,7 +118,7 @@ export function dataFilter(
 }
 
 export function tableValidator(data: string) {
-	const pattern = /(\w+)\s*=\s*(?:'([^']*)'|"([^"]*)"|([^,]+))/gi;
+	const pattern = /(\w+)\s*=\s*(string|number|int|boolean)/gi;
 	const temp: table_struct = {}
 	let match;
 
