@@ -3,7 +3,7 @@
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */
 
-import { data_structure, main_structure } from "../interface";
+import { data_structure, filterOptions, main_structure } from "../interface";
 import { read } from "../middlewares/data_control";
 import { stringToJson } from "../utils";
 
@@ -12,18 +12,45 @@ export default function filter_data(filename: string, key: string, cache: main_s
 		Object.assign(cache, read(filename, key))
 	}
 
-	return (table: string, data: data_structure | string) => {
-		if (typeof data === "string") {
-			data = stringToJson(data)
+	return (table: string, opts: filterOptions) => {
+		if (opts === undefined) {
+			opts = {
+				limit: 10,
+				start: 0,
+			}
 		}
 
-		const keys = Object.keys(data)
-		const values = Object.values(cache[table])
-		// let filter: data_structure = {}
-		// keys.forEach((key) => {
-		const filter = values.filter(d => d[keys[0]] === data[keys[0]])
-		// })
+		if (typeof opts.query === "string") {
+			opts.query = stringToJson(opts.query)
+		}
 
-		return filter
+		// TODO: This function is good for paginator
+		// To Prevent long load time
+		if (opts?.limit === undefined) {
+			opts.limit = 10
+		}
+
+		// TODO: To initially starts with the first index
+		if (opts?.start === undefined) {
+			opts.start = 0
+		}
+
+		let filteredData: data_structure[] = []
+		const keys = Object.keys(opts?.query)
+		const values = Object.values(cache[table])
+
+		if (opts.query !== undefined) {
+			// TODO: To search with specific data
+			for (let [i, x] = [opts.start, opts.start]; i < opts.limit && x < opts.limit; x++) {
+				i++
+			}
+		} else {
+			// TODO: Select All
+			for (let i = opts.start; i < opts.limit; i++) {
+				filteredData.push(values[i])
+			}
+		}
+
+		return filteredData
 	}
 }

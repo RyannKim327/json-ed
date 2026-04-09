@@ -8,3 +8,9 @@ export interface insertOptions {
 	increment?: boolean
 	idLength?: number
 }
+
+export interface filterOptions {
+	limit?: number
+	start?: number
+	query?: data_structure | string
+}
