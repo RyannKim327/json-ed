@@ -17,11 +17,11 @@ export default function renameTable(filename: string, key: string, cache: main_s
 			throw new Error("Table name only accepts alphabet characters and underscore")
 		}
 
+		newTable = newTable.toLowerCase()
+
 		if (newTable === "table_struct") {
 			throw new Error("Cannot access reserved table: table_struct");
 		}
-
-		newTable = newTable.toLowerCase()
 
 		if (cache["table_struct"][oldTable] === undefined) {
 			throw new Error(`The table ${oldTable} is not found`)
