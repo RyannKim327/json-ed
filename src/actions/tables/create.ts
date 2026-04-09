@@ -8,8 +8,15 @@ import { read, save } from "../../middlewares/data_control";
 import { c, tableValidator } from "../../utils";
 
 export default function createTable(filename: string, key: string, cache: main_structure) {
+	if (Object.keys(cache).length === 0) {
+		Object.assign(cache, read(filename, key))
+	}
 	return (table: string, columns: table_struct | string, autoincrement?: boolean) => {
 		table = table.toLowerCase()
+		const regex = /^[A-Za-z_]+$/
+		if (!regex.test(table)) {
+			throw new Error("Table name only accepts alphabet characters and underscore")
+		}
 
 		// TODO: Anti destroy reserve table
 		if (table === "table_struct") {
@@ -22,10 +29,6 @@ export default function createTable(filename: string, key: string, cache: main_s
 
 		if (typeof columns === "string") {
 			columns = tableValidator(columns)
-		}
-
-		if (Object.keys(cache).length === 0) {
-			Object.assign(cache, read(filename, key))
 		}
 
 		// TODO: To prevent overwrite of the table

@@ -14,6 +14,8 @@ import update_data from "./actions/update";
 import delete_data from "./actions/delete";
 import create_table from "./actions/tables/create";
 import alter_table from "./actions/tables/alter";
+import renameTable from "./actions/tables/rename";
+import filter_data from "./actions/filter";
 
 export function ormyx(key: string, filename?: string) {
 	// TODO: To create a default name if it is blank
@@ -40,19 +42,29 @@ export function ormyx(key: string, filename?: string) {
 	const cache: main_structure = generateJSON(filename, key)
 
 	// INFO: The return functions or public functions
+	// INFO: Function about data
 	const insert = insert_data(filename, key, cache)
 	const read = read_data(filename, key, cache)
 	const update = update_data(filename, key, cache)
 	const remove = delete_data(filename, key, cache)
+	const filter = filter_data(filename, key, cache)
+
+	// INFO: Functions about table
 	const create = create_table(filename, key, cache)
 	const alter = alter_table(filename, key, cache)
+	const rename = renameTable(filename, key, cache)
 
 	return {
+		// INFO: Data actions
 		insert,
+		filter,
 		read,
 		remove,
 		update,
+
+		// INFO: Table actions
+		alter,
 		create,
-		alter
+		rename
 	}
 }
