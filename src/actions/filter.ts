@@ -36,8 +36,26 @@ export default function filter_data(filename: string, key: string, cache: main_s
 		}
 
 		let filteredData: data_structure[] = []
-		const keys = Object.keys(opts?.query)
+		const keys = Object.keys(opts?.query ?? {})
 		const values = Object.values(cache[table])
+
+		// TODO: Setup defaults if negative
+		if (opts.start <= 0) {
+			opts.start = 0
+		}
+
+		if (opts.limit <= 0) {
+			opts.limit = 10
+		}
+
+		// TODO: To setup defaults if the number is greater than the total of data
+		if (opts.start >= values.length) {
+			opts.start = values.length
+		}
+
+		if (opts.limit >= values.length) {
+			opts.limit = values.length
+		}
 
 		if (opts.query !== undefined) {
 			// TODO: To search with specific data
