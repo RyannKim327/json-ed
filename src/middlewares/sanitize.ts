@@ -3,9 +3,10 @@
  */
 
 import { data_structure, main_structure } from "../interface";
+import { RESERVED_TABLE } from "../reserved";
 
 export default function sanitizingData(table: string, data: data_structure, cache: main_structure) {
-	const columns = cache["table_struct"][table]
+	const columns = cache[RESERVED_TABLE][table]
 	const allowedColumns = Object.keys(columns)
 
 	const sanitized: data_structure = {}

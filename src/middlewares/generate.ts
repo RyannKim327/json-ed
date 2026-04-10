@@ -4,15 +4,16 @@
 
 import * as fs from "fs"
 import { read, save } from "./data_control"
+import { RESERVED_TABLE } from "../reserved"
 
 export default function generateJSON(filename: string, key: string) {
 	if (!fs.existsSync(filename)) {
-		save(filename, key, { "table_struct": {} })
-		return { "table_struct": {} }
+		save(filename, key, { [RESERVED_TABLE]: {} })
+		return { [RESERVED_TABLE]: {} }
 	}
 	const data = read(filename, key)
-	if (data["table_struct"] === undefined) {
-		data["table_struct"] = {}
+	if (data[RESERVED_TABLE] === undefined) {
+		data[RESERVED_TABLE] = {}
 	}
 	return data
 }
