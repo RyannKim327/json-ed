@@ -36,7 +36,7 @@ export default function filter_data(filename: string, key: string, cache: main_s
 		}
 
 		let filteredData: data_structure[] = []
-		const keys = Object.keys(opts?.query ?? {})
+		// const keys = Object.keys(opts?.query ?? {})
 		const values = Object.values(cache[table])
 
 		// TODO: Setup defaults if negative
