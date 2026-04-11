@@ -5,7 +5,7 @@
 
 import { main_structure, table_struct } from "../../interface";
 import { read, save } from "../../middlewares/data_control";
-import { tableValidator } from "../../utils";
+import { isForbiddenKey, tableValidator } from "../../utils";
 
 export default function alter(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -14,6 +14,10 @@ export default function alter(filename: string, key: string, cache: main_structu
 	return (table: string, newCol?: string | table_struct, deleteCol?: string[]) => {
 		// TODO: Development soon, but I already have an idea, I need to figure it out first
 		table = table.toLowerCase()
+
+		if (isForbiddenKey(table)) {
+			throw new Error("Cannot use forbidden key as table name");
+		}
 		const reservedTable = "table_struct"
 
 		if (table === "table_struct") {

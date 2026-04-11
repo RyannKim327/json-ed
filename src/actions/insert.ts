@@ -5,7 +5,7 @@
 
 import { data_structure, insertOptions, main_structure } from "../interface";
 import { read, save } from "../middlewares/data_control";
-import { dataFilter, idGenerator, stringToJson, toLowerCaseKeys } from "../utils";
+import { dataFilter, idGenerator, isForbiddenKey, stringToJson, toLowerCaseKeys } from "../utils";
 
 export default function insert_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -16,6 +16,11 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		let limit = 12
 
 		table = table.toLowerCase()
+
+		if (isForbiddenKey(table)) {
+			throw new Error("Cannot use forbidden key as table name");
+		}
+
 		// TODO: To prevent reserved table to access
 		if (table === "table_struct") {
 			throw new Error("Cannot access reserved table: table_struct");

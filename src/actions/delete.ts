@@ -5,7 +5,7 @@
 
 import { main_structure } from "../interface";
 import { read, save } from "../middlewares/data_control";
-import { c } from "../utils";
+import { c, isForbiddenKey } from "../utils";
 
 export default function delete_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -13,6 +13,11 @@ export default function delete_data(filename: string, key: string, cache: main_s
 	}
 
 	return (table: string, id: string | number) => {
+		table = table.toLowerCase();
+		if (isForbiddenKey(table) || isForbiddenKey(id)) {
+			throw new Error("Cannot use forbidden key as table name or id");
+		}
+
 		if (cache[table] === undefined) {
 			throw new Error("No Table Found")
 		}

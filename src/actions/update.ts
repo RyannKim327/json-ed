@@ -6,7 +6,7 @@
 import { data_structure, main_structure } from "../interface";
 import { read, save } from "../middlewares/data_control";
 import sanitizingData from "../middlewares/sanitize";
-import { c, dataFilter, stringToJson, toLowerCaseKeys } from "../utils";
+import { c, dataFilter, isForbiddenKey, stringToJson, toLowerCaseKeys } from "../utils";
 
 export default function update_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -15,6 +15,10 @@ export default function update_data(filename: string, key: string, cache: main_s
 
 	return (table: string, id: string | number, data: string | data_structure) => {
 		table = table.toLowerCase()
+
+		if (isForbiddenKey(table) || isForbiddenKey(id)) {
+			throw new Error("Cannot use forbidden key as table name or id");
+		}
 
 		// TODO: To prevent reserved table to access
 		if (table === "table_struct") {

@@ -16,6 +16,7 @@ import create_table from "./actions/tables/create";
 import alter_table from "./actions/tables/alter";
 import renameTable from "./actions/tables/rename";
 import filter_data from "./actions/filter";
+import * as path from "path";
 
 export function ormyx(key: string, filename?: string) {
 	// TODO: To create a default name if it is blank
@@ -27,12 +28,9 @@ export function ormyx(key: string, filename?: string) {
 		throw new Error("Filename is too short")
 	}
 
-	// TODO: To filter the filename to prevent multi dots
-	const actualFile = filename.split("/");
-	const lastPart = actualFile[actualFile.length - 1];
-	const nameOnly = lastPart.split(".")[0];
-	actualFile.push(nameOnly);
-	filename = actualFile[actualFile.length - 1];
+	// TODO: To filter the filename to prevent multi dots and path traversal
+	filename = path.basename(filename);
+	filename = filename.split(".")[0];
 
 	if (!filename.endsWith(".dat")) {
 		filename += ".dat"
