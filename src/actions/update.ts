@@ -7,6 +7,7 @@ import { data_structure, main_structure } from "../interface";
 import { read, save } from "../middlewares/data_control";
 import sanitizingData from "../middlewares/sanitize";
 import { c, dataFilter, isForbiddenKey, stringToJson, toLowerCaseKeys } from "../utils";
+import { RESERVED_TABLE } from "../reserved";
 
 export default function update_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -21,8 +22,8 @@ export default function update_data(filename: string, key: string, cache: main_s
 		}
 
 		// TODO: To prevent reserved table to access
-		if (table === "table_struct") {
-			throw new Error("Cannot access reserved table: table_struct");
+		if (table === RESERVED_TABLE) {
+			throw new Error(`Cannot access reserved table: ${RESERVED_TABLE}`);
 		}
 
 		if (cache[table] === undefined) {
@@ -48,7 +49,7 @@ export default function update_data(filename: string, key: string, cache: main_s
 
 		Object.keys(data).forEach((key) => {
 			// TODO: To filter only allowed columns
-			const keys = Object.keys(cache["table_struct"][table])
+			const keys = Object.keys(cache[RESERVED_TABLE][table])
 			if (keys.includes(key)) {
 				if (!Array.isArray(cache[table][id])) {
 					cache[table][id][key] = data[key]

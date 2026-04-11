@@ -1,5 +1,6 @@
 import { data_structure, main_structure, table_struct } from "./interface"
 import * as crypto from "crypto"
+import { RESERVED_COLUMN, RESERVED_TABLE } from "./reserved";
 
 export function isForbiddenKey(key: string | number) {
 	const forbidden = ["__proto__", "constructor", "prototype"]
@@ -82,7 +83,9 @@ export function stringToJson(data: string) {
 	while ((match = pattern.exec(data)) !== null) {
 		const key = match[1].replace(/\s/gi, "").trim().toLowerCase();
 		const valueRaw = match[2] ?? match[3] ?? match[4];
-		temp[key] = parseValue(valueRaw) ?? null;
+		if (key !== RESERVED_COLUMN) {
+			temp[key] = parseValue(valueRaw) ?? null;
+		}
 	}
 
 	return temp
@@ -93,7 +96,7 @@ export function dataFilter(
 	data: data_structure,
 	cache: main_structure
 ) {
-	const tbls = cache["table_struct"][table];
+	const tbls = cache[RESERVED_TABLE][table];
 	const keys = Object.keys(tbls);
 
 	const DEFAULTS: Record<string, string | number | boolean | null> = {
@@ -106,17 +109,19 @@ export function dataFilter(
 
 	keys.forEach((key) => {
 		const value = data[key];
-		if (tbls[key] === "int") {
-			tbls[key] = "number"
-		}
-		if (data[key]) {
-			if (typeof value === tbls[key]) {
-				result[key] = value ?? (DEFAULTS[typeof (value)] ?? null);
+		if (key !== RESERVED_COLUMN) {
+			if (tbls[key] === "int") {
+				tbls[key] = "number"
+			}
+			if (data[key]) {
+				if (typeof value === tbls[key]) {
+					result[key] = value ?? (DEFAULTS[typeof (value)] ?? null);
+				} else {
+					result[key] = DEFAULTS[typeof (value)] ?? null
+				}
 			} else {
 				result[key] = DEFAULTS[typeof (value)] ?? null
 			}
-		} else {
-			result[key] = DEFAULTS[typeof (value)] ?? null
 		}
 	});
 
@@ -130,16 +135,26 @@ export function tableValidator(data: string) {
 
 	const types = ["string", "number", "boolean", "int"]
 
+	// TODO: Add Primary key
 	while ((match = pattern.exec(data)) !== null) {
 		const key = match[1].replace(/\s/gi, "").trim().toLowerCase();
 		let valueRaw = match[2];
-		if (valueRaw !== null) {
-			if (types.includes(valueRaw)) {
-				if (valueRaw === "int") {
-					valueRaw = "number"
-				}
-				if (typeof valueRaw === "string") {
-					temp[key] = valueRaw;
+		if (key !== RESERVED_COLUMN) {
+			if (valueRaw !== null) {
+				if (types.includes(valueRaw)) {
+					if (valueRaw === "int") {
+						valueRaw = "number"
+					}
+					if (typeof valueRaw === "string") {
+						temp[key] = valueRaw;
+					}
+
+					// TODO: To create a unique key
+					// if (unique) {
+					// 	if (temp[RESERVED_COLUMN] === undefined && key === unique.toLowerCase()) {
+					// 		temp[RESERVED_COLUMN] = key
+					// 	}
+					// }
 				}
 			}
 		}

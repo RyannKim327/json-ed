@@ -6,6 +6,7 @@
 import { data_structure, insertOptions, main_structure } from "../interface";
 import { read, save } from "../middlewares/data_control";
 import { dataFilter, idGenerator, isForbiddenKey, stringToJson, toLowerCaseKeys } from "../utils";
+import { RESERVED_TABLE } from "../reserved";
 
 export default function insert_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -22,14 +23,15 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		}
 
 		// TODO: To prevent reserved table to access
-		if (table === "table_struct") {
-			throw new Error("Cannot access reserved table: table_struct");
+		if (table === RESERVED_TABLE) {
+			throw new Error(`Cannot access reserved table: ${RESERVED_TABLE}`);
 		}
 
 		// TODO: To question the existence of table
 		// This error must create a table first for the list of columns
 		// It is very important to create first rather than automatically create
 		// to prevent some non-sql injection
+
 		if (cache[table] === undefined) {
 			throw new Error("Please create a table first before you add data on this table")
 		}
@@ -55,7 +57,7 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		data = dataFilter(table, data, cache)
 
 		let id: string | number = 1
-		if (cache["table_struct"][table]["id"] === "number") {
+		if (cache[RESERVED_TABLE][table]["id"] === "number") {
 			const keys = Object.keys(cache[table])
 			if (keys.length > 0) {
 				id = keys[keys.length - 1]
