@@ -5,6 +5,7 @@
 
 import { main_structure } from "../interface";
 import { read } from "../middlewares/data_control";
+import { RESERVED_TABLE } from "../reserved";
 import { c } from "../utils";
 
 export default function read_data(filename: string, key: string, cache: main_structure) {
@@ -16,8 +17,8 @@ export default function read_data(filename: string, key: string, cache: main_str
 		table = table.toLowerCase()
 
 		// TODO: To prevent reserved table to access
-		if (table === "table_struct") {
-			throw new Error("Cannot access reserved table: table_struct");
+		if (table === RESERVED_TABLE) {
+			throw new Error(`Cannot access reserved table: ${RESERVED_TABLE}`);
 		}
 
 		if (cache[table] === undefined) {

@@ -14,3 +14,8 @@ export interface filterOptions {
 	start?: number
 	query?: data_structure | string
 }
+
+export interface createTableOptions {
+	unique?: string,
+	autoincrement?: boolean
+}

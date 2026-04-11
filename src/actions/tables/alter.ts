@@ -5,7 +5,8 @@
 
 import { main_structure, table_struct } from "../../interface";
 import { read, save } from "../../middlewares/data_control";
-import { tableValidator } from "../../utils";
+import { RESERVED_COLUMN, RESERVED_TABLE } from "../../reserved";
+import { c, tableValidator } from "../../utils";
 
 export default function alter(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -14,23 +15,22 @@ export default function alter(filename: string, key: string, cache: main_structu
 	return (table: string, newCol?: string | table_struct, deleteCol?: string[]) => {
 		// TODO: Development soon, but I already have an idea, I need to figure it out first
 		table = table.toLowerCase()
-		const reservedTable = "table_struct"
 
-		if (table === "table_struct") {
-			throw new Error("Cannot access reserved table: table_struct");
+		if (table === RESERVED_TABLE) {
+			throw new Error(`Cannot access reserved table: ${RESERVED_TABLE}`);
 		}
 
-		if (cache[reservedTable][table] === undefined) {
+		if (cache[RESERVED_TABLE][table] === undefined) {
 			throw new Error("The table is not existed")
 		}
 
 		// TODO: To solve type error
-		let current: table_struct = cache[reservedTable]?.[table] as table_struct;
+		let current: table_struct = cache[RESERVED_TABLE]?.[table] as table_struct;
 
 		if (deleteCol !== undefined) {
 			deleteCol.forEach((k) => {
 				if (current[k] !== undefined) {
-					if (k !== "id") {
+					if (k !== "id" && k !== RESERVED_COLUMN) {
 						delete current[k]
 					}
 				}
@@ -41,7 +41,15 @@ export default function alter(filename: string, key: string, cache: main_structu
 			if (typeof newCol === "string") {
 				newCol = tableValidator(newCol)
 			}
+
+			if (newCol[RESERVED_COLUMN] !== undefined) {
+				delete newCol[RESERVED_COLUMN]
+				c("Altering table", "w", `A reserve column is deleted`)
+			}
+
 			if (newCol["id"]) delete newCol["id"]
+			if (newCol[RESERVED_COLUMN]) delete newCol[RESERVED_COLUMN]
+
 
 			current = {
 				...current,
@@ -49,7 +57,7 @@ export default function alter(filename: string, key: string, cache: main_structu
 			}
 		}
 
-		cache[reservedTable][table] = current;
+		cache[RESERVED_TABLE][table] = current;
 		save(filename, key, cache);
 		return cache
 	}

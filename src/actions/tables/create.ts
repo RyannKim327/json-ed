@@ -3,15 +3,19 @@
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */
 
-import { main_structure, table_struct } from "../../interface";
+import { createTableOptions, main_structure, table_struct } from "../../interface";
 import { read, save } from "../../middlewares/data_control";
+import { RESERVED_COLUMN, RESERVED_TABLE } from "../../reserved";
 import { c, tableValidator } from "../../utils";
 
 export default function createTable(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
 		Object.assign(cache, read(filename, key))
 	}
-	return (table: string, columns: table_struct | string, autoincrement?: boolean) => {
+	return (table: string, columns: table_struct | string, { autoincrement, unique }: createTableOptions) => {
+
+		// TODO: Changing the type structure
+
 		table = table.toLowerCase()
 		const regex = /^[A-Za-z_]+$/
 		if (!regex.test(table)) {
@@ -19,8 +23,8 @@ export default function createTable(filename: string, key: string, cache: main_s
 		}
 
 		// TODO: Anti destroy reserve table
-		if (table === "table_struct") {
-			throw new Error("Cannot access reserved table: table_struct");
+		if (table === RESERVED_TABLE) {
+			throw new Error(`Cannot access reserved table: ${RESERVED_TABLE}`);
 		}
 
 		if (autoincrement === undefined) {
@@ -29,6 +33,11 @@ export default function createTable(filename: string, key: string, cache: main_s
 
 		if (typeof columns === "string") {
 			columns = tableValidator(columns)
+		}
+
+		if (columns[RESERVED_COLUMN] !== undefined) {
+			delete columns[RESERVED_COLUMN]
+			c("Creation of table", "w", `A reserve column is deleted`)
 		}
 
 		// TODO: To prevent overwrite of the table
@@ -50,7 +59,11 @@ export default function createTable(filename: string, key: string, cache: main_s
 			throw new Error("ID only requires string or number/int datatype")
 		}
 
-		cache["table_struct"][table] = columns
+		if (unique !== undefined) {
+			columns[RESERVED_COLUMN] = unique
+		}
+
+		cache[RESERVED_TABLE][table] = columns
 
 		save(filename, key, cache)
 		return {

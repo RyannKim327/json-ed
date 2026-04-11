@@ -5,6 +5,7 @@
 
 import { main_structure } from "../../interface";
 import { read, save } from "../../middlewares/data_control";
+import { RESERVED_TABLE } from "../../reserved";
 
 export default function renameTable(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -16,7 +17,7 @@ export default function renameTable(filename: string, key: string, cache: main_s
 		if (!regex.test(newTable)) {
 			throw new Error("Table name only accepts alphabet characters and underscore")
 		}
-		if (!regex.test(noldTable)) {
+		if (!regex.test(oldTable)) {
 			throw new Error("Table name only accepts alphabet characters and underscore")
 		}
 
@@ -29,11 +30,11 @@ export default function renameTable(filename: string, key: string, cache: main_s
 			}
 		}
 
-		if (newTable === "table_struct") {
+		if (newTable === RESERVED_TABLE) {
 			throw new Error("Cannot access reserved table: table_struct");
 		}
 
-		if (cache["table_struct"][oldTable] === undefined) {
+		if (cache[RESERVED_TABLE][oldTable] === undefined) {
 			throw new Error(`The table ${oldTable} is not found`)
 		}
 
@@ -41,11 +42,11 @@ export default function renameTable(filename: string, key: string, cache: main_s
 			throw new Error(`The table ${oldTable} is existed, but the data is not existing`)
 		}
 
-		if (cache["table_struct"][oldTable] !== undefined && cache[oldTable] !== undefined) {
-			cache["table_struct"][newTable] = cache["table_struct"][oldTable]
+		if (cache[RESERVED_TABLE][oldTable] !== undefined && cache[oldTable] !== undefined) {
+			cache[RESERVED_TABLE][newTable] = cache[RESERVED_TABLE][oldTable]
 			cache[newTable] = cache[oldTable]
 
-			delete cache["table_struct"][oldTable]
+			delete cache[RESERVED_TABLE][oldTable]
 			delete cache[oldTable]
 			save(filename, key, cache)
 			return {
