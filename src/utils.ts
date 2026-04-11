@@ -1,5 +1,11 @@
 import { data_structure, main_structure, table_struct } from "./interface"
+import * as crypto from "crypto"
 import { RESERVED_COLUMN, RESERVED_TABLE } from "./reserved";
+
+export function isForbiddenKey(key: string | number) {
+	const forbidden = ["__proto__", "constructor", "prototype"]
+	return forbidden.includes(String(key).toLowerCase())
+}
 
 export function c(from: string, status: string, message: string) {
 	status = status.toLowerCase()
@@ -41,7 +47,7 @@ export function idGenerator(length: number = 12) {
 	const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	let code = ""
 	for (let i = 0; i < limit; i++) {
-		const p = Math.floor(Math.random() * chars.length)
+		const p = crypto.randomInt(0, chars.length)
 		const c = chars[p]
 		code += c
 	}

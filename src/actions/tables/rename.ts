@@ -5,6 +5,7 @@
 
 import { main_structure } from "../../interface";
 import { read, save } from "../../middlewares/data_control";
+import { isForbiddenKey } from "../../utils";
 import { RESERVED_TABLE } from "../../reserved";
 
 export default function renameTable(filename: string, key: string, cache: main_structure) {
@@ -13,6 +14,13 @@ export default function renameTable(filename: string, key: string, cache: main_s
 	}
 
 	return (oldTable: string, newTable: string) => {
+		oldTable = oldTable.toLowerCase()
+		newTable = newTable.toLowerCase()
+
+		if (isForbiddenKey(oldTable) || isForbiddenKey(newTable)) {
+			throw new Error("Cannot use forbidden key as table name");
+		}
+
 		const regex = /^[A-Za-z_]+$/
 		if (!regex.test(newTable)) {
 			throw new Error("Table name only accepts alphabet characters and underscore")
@@ -20,9 +28,6 @@ export default function renameTable(filename: string, key: string, cache: main_s
 		if (!regex.test(oldTable)) {
 			throw new Error("Table name only accepts alphabet characters and underscore")
 		}
-
-		newTable = newTable.toLowerCase()
-		oldTable = oldTable.toLowerCase()
 
 		if (oldTable === newTable) {
 			return {

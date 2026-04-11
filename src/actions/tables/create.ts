@@ -5,8 +5,8 @@
 
 import { createTableOptions, main_structure, table_struct } from "../../interface";
 import { read, save } from "../../middlewares/data_control";
+import { c, isForbiddenKey, tableValidator } from "../../utils";
 import { RESERVED_COLUMN, RESERVED_TABLE } from "../../reserved";
-import { c, tableValidator } from "../../utils";
 
 export default function createTable(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -17,6 +17,11 @@ export default function createTable(filename: string, key: string, cache: main_s
 		// TODO: Changing the type structure
 
 		table = table.toLowerCase()
+
+		if (isForbiddenKey(table)) {
+			throw new Error("Cannot use forbidden key as table name");
+		}
+
 		const regex = /^[A-Za-z_]+$/
 		if (!regex.test(table)) {
 			throw new Error("Table name only accepts alphabet characters and underscore")

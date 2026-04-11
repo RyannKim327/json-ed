@@ -5,7 +5,7 @@
 
 import { data_structure, filterOptions, main_structure } from "../interface";
 import { read } from "../middlewares/data_control";
-import { stringToJson } from "../utils";
+import { isForbiddenKey, stringToJson } from "../utils";
 
 export default function filter_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -13,6 +13,11 @@ export default function filter_data(filename: string, key: string, cache: main_s
 	}
 
 	return (table: string, opts: filterOptions) => {
+		table = table.toLowerCase();
+		if (isForbiddenKey(table)) {
+			throw new Error("Cannot use forbidden key as table name");
+		}
+
 		if (opts === undefined) {
 			opts = {
 				limit: 10,
