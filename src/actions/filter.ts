@@ -70,6 +70,7 @@ export default function filter_data(filename: string, key: string, cache: main_s
 
 		if (opts.andQuery !== undefined) {
 			// TODO: To search with specific data
+			all = false
 			for (let [i, x] = [opts.start, opts.start]; i < opts.limit && x < opts.limit; x++) {
 				i++
 			}
@@ -77,6 +78,7 @@ export default function filter_data(filename: string, key: string, cache: main_s
 
 		if (opts.orQuery !== undefined) {
 			// TODO: To search with specific data
+			all = false
 			for (let [i, x] = [opts.start, opts.start]; i < opts.limit && x < opts.limit; x++) {
 				i++
 			}
