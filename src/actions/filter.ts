@@ -13,6 +13,7 @@ export default function filter_data(filename: string, key: string, cache: main_s
 	}
 
 	return (table: string, opts: filterOptions) => {
+		let all = true
 		table = table.toLowerCase();
 		if (isForbiddenKey(table)) {
 			throw new Error("Cannot use forbidden key as table name");
@@ -25,8 +26,12 @@ export default function filter_data(filename: string, key: string, cache: main_s
 			}
 		}
 
-		if (typeof opts.query === "string") {
-			opts.query = stringToJson(opts.query)
+		if (typeof opts.andQuery === "string") {
+			opts.andQuery = stringToJson(opts.andQuery)
+		}
+
+		if (typeof opts.orQuery === "string") {
+			opts.orQuery = stringToJson(opts.orQuery)
 		}
 
 		// TODO: This function is good for paginator
@@ -41,7 +46,8 @@ export default function filter_data(filename: string, key: string, cache: main_s
 		}
 
 		let filteredData: data_structure[] = []
-		// const keys = Object.keys(opts?.query ?? {})
+		const and = Object.keys(opts?.andQuery ?? {})
+		const or = Object.keys(opts?.orQuery ?? {})
 		const values = Object.values(cache[table])
 
 		// TODO: Setup defaults if negative
@@ -62,12 +68,21 @@ export default function filter_data(filename: string, key: string, cache: main_s
 			opts.limit = values.length
 		}
 
-		if (opts.query !== undefined) {
+		if (opts.andQuery !== undefined) {
 			// TODO: To search with specific data
 			for (let [i, x] = [opts.start, opts.start]; i < opts.limit && x < opts.limit; x++) {
 				i++
 			}
-		} else {
+		}
+
+		if (opts.orQuery !== undefined) {
+			// TODO: To search with specific data
+			for (let [i, x] = [opts.start, opts.start]; i < opts.limit && x < opts.limit; x++) {
+				i++
+			}
+		}
+
+		if (all) {
 			// TODO: Select All
 			for (let i = opts.start; i < opts.limit; i++) {
 				filteredData.push(values[i])

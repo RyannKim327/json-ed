@@ -5,7 +5,7 @@
 
 import { main_structure, table_struct } from "../../interface";
 import { read, save } from "../../middlewares/data_control";
-import { isForbiddenKey, tableValidator } from "../../utils";
+import { c, isForbiddenKey, tableValidator } from "../../utils";
 import { RESERVED_COLUMN, RESERVED_TABLE } from "../../reserved";
 
 export default function alter(filename: string, key: string, cache: main_structure) {
@@ -19,8 +19,6 @@ export default function alter(filename: string, key: string, cache: main_structu
 		if (isForbiddenKey(table)) {
 			throw new Error("Cannot use forbidden key as table name");
 		}
-    
-		const reservedTable = "table_struct"
 
 		if (table === RESERVED_TABLE) {
 			throw new Error(`Cannot access reserved table: ${RESERVED_TABLE}`);

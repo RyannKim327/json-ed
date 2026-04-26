@@ -12,9 +12,15 @@ export default function createTable(filename: string, key: string, cache: main_s
 	if (Object.keys(cache).length === 0) {
 		Object.assign(cache, read(filename, key))
 	}
-	return (table: string, columns: table_struct | string, { autoincrement, unique }: createTableOptions) => {
-
+	return (table: string, columns: table_struct | string, opts?: createTableOptions) => {
 		// TODO: Changing the type structure
+
+		if (!opts) {
+			opts = {
+				autoincrement: true,
+				unique: ""
+			}
+		}
 
 		table = table.toLowerCase()
 
@@ -32,8 +38,8 @@ export default function createTable(filename: string, key: string, cache: main_s
 			throw new Error(`Cannot access reserved table: ${RESERVED_TABLE}`);
 		}
 
-		if (autoincrement === undefined) {
-			autoincrement = true
+		if (opts?.autoincrement === undefined) {
+			opts.autoincrement = true
 		}
 
 		if (typeof columns === "string") {
@@ -64,8 +70,8 @@ export default function createTable(filename: string, key: string, cache: main_s
 			throw new Error("ID only requires string or number/int datatype")
 		}
 
-		if (unique !== undefined) {
-			columns[RESERVED_COLUMN] = unique
+		if (opts?.unique !== undefined) {
+			columns[RESERVED_COLUMN] = opts?.unique ?? ""
 		}
 
 		cache[RESERVED_TABLE][table] = columns
