@@ -1,6 +1,7 @@
 import { data_structure, main_structure, table_struct } from "./interface"
 import * as crypto from "crypto"
 import { RESERVED_COLUMN, RESERVED_TABLE } from "./reserved";
+import { OrmyxWhereClauseException } from "./exceptions";
 
 export function isForbiddenKey(key: string | number) {
 	const forbidden = ["__proto__", "constructor", "prototype"]
@@ -161,4 +162,17 @@ export function tableValidator(data: string) {
 	}
 
 	return temp
+}
+
+export function whereClause(data: data_structure, where?: string) {
+	const pattern = /(\w+\s*=\s*\w+|AND|OR)/gi
+	if (where) {
+		// TODO: To extract data
+		if (pattern.test(where)) {
+			// TODO: Process of Extraction
+		} else {
+			throw new OrmyxWhereClauseException("Error")
+		}
+	}
+	return data
 }

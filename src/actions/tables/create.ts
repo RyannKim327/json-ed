@@ -7,6 +7,7 @@ import { createTableOptions, main_structure, table_struct } from "../../interfac
 import { read, save } from "../../middlewares/data_control";
 import { c, isForbiddenKey, tableValidator } from "../../utils";
 import { RESERVED_COLUMN, RESERVED_TABLE } from "../../reserved";
+import { OrmyxForbiddenTableException } from "../../exceptions";
 
 export default function createTable(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -25,17 +26,17 @@ export default function createTable(filename: string, key: string, cache: main_s
 		table = table.toLowerCase()
 
 		if (isForbiddenKey(table)) {
-			throw new Error("Cannot use forbidden key as table name");
+			throw new OrmyxForbiddenTableException("Cannot use forbidden key as table name");
 		}
 
 		const regex = /^[A-Za-z_]+$/
 		if (!regex.test(table)) {
-			throw new Error("Table name only accepts alphabet characters and underscore")
+			throw new OrmyxForbiddenTableException("Table name only accepts alphabet characters and underscore")
 		}
 
 		// TODO: Anti destroy reserve table
 		if (table === RESERVED_TABLE) {
-			throw new Error(`Cannot access reserved table: ${RESERVED_TABLE}`);
+			throw new OrmyxForbiddenTableException(`Cannot access reserved table: ${RESERVED_TABLE}`);
 		}
 
 		if (opts?.autoincrement === undefined) {

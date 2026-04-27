@@ -5,7 +5,7 @@
 
 import { data_structure, filterOptions, main_structure } from "../interface";
 import { read } from "../middlewares/data_control";
-import { isForbiddenKey, stringToJson } from "../utils";
+import { isForbiddenKey, whereClause } from "../utils";
 
 export default function filter_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -26,14 +26,6 @@ export default function filter_data(filename: string, key: string, cache: main_s
 			}
 		}
 
-		if (typeof opts.andQuery === "string") {
-			opts.andQuery = stringToJson(opts.andQuery)
-		}
-
-		if (typeof opts.orQuery === "string") {
-			opts.orQuery = stringToJson(opts.orQuery)
-		}
-
 		// TODO: This function is good for paginator
 		// To Prevent long load time
 		if (opts?.limit === undefined) {
@@ -46,8 +38,6 @@ export default function filter_data(filename: string, key: string, cache: main_s
 		}
 
 		let filteredData: data_structure[] = []
-		const and = Object.keys(opts?.andQuery ?? {})
-		const or = Object.keys(opts?.orQuery ?? {})
 		const values = Object.values(cache[table])
 
 		// TODO: Setup defaults if negative
@@ -68,20 +58,10 @@ export default function filter_data(filename: string, key: string, cache: main_s
 			opts.limit = values.length
 		}
 
-		if (opts.andQuery !== undefined) {
+		if (opts.where !== undefined) {
 			// TODO: To search with specific data
 			all = false
-			for (let [i, x] = [opts.start, opts.start]; i < opts.limit && x < opts.limit; x++) {
-				i++
-			}
-		}
-
-		if (opts.orQuery !== undefined) {
-			// TODO: To search with specific data
-			all = false
-			for (let [i, x] = [opts.start, opts.start]; i < opts.limit && x < opts.limit; x++) {
-				i++
-			}
+			data = whereClause(cache[table], opts.where)
 		}
 
 		if (all) {
