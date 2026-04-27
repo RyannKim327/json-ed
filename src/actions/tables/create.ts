@@ -7,7 +7,7 @@ import { createTableOptions, main_structure, table_struct } from "../../interfac
 import { read, save } from "../../middlewares/data_control";
 import { c, isForbiddenKey, tableValidator } from "../../utils";
 import { RESERVED_COLUMN, RESERVED_TABLE } from "../../reserved";
-import { OrmyxForbiddenTableException } from "../../exceptions";
+import { OrmyxForbiddenTableException, OrmyxTableExistenceException } from "../../exceptions";
 
 export default function createTable(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -55,7 +55,7 @@ export default function createTable(filename: string, key: string, cache: main_s
 		// TODO: To prevent overwrite of the table
 		if (cache[table] !== undefined) {
 			c("Create Table", "e", "Table is already existed")
-			return
+			throw new OrmyxTableExistenceException("Table is already existed")
 		}
 
 		// TODO: Clearing cache table

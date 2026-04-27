@@ -3,7 +3,7 @@
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */
 
-import { data_structure, filterOptions, main_structure } from "../interface";
+import { data_structure, filterOptions, main_structure, table_struct } from "../interface";
 import { read } from "../middlewares/data_control";
 import { isForbiddenKey, whereClause } from "../utils";
 
@@ -61,7 +61,7 @@ export default function filter_data(filename: string, key: string, cache: main_s
 		if (opts.where !== undefined) {
 			// TODO: To search with specific data
 			all = false
-			data = whereClause(cache[table], opts.where)
+			const data = whereClause(cache[table], opts.where)
 		}
 
 		if (all) {

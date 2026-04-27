@@ -1,4 +1,4 @@
-import { data_structure, main_structure, table_struct } from "./interface"
+import { data_structure, json_data, main_structure, table_base, table_struct } from "./interface"
 import * as crypto from "crypto"
 import { RESERVED_COLUMN, RESERVED_TABLE } from "./reserved";
 import { OrmyxWhereClauseException } from "./exceptions";
@@ -164,12 +164,14 @@ export function tableValidator(data: string) {
 	return temp
 }
 
-export function whereClause(data: data_structure, where?: string) {
-	const pattern = /(\w+\s*=\s*\w+|AND|OR)/gi
+export function whereClause(data: table_base | json_data, where?: string) {
+	const pattern = /(\w+\s*=\s*(?:"[^"]*"|'[^']*'|\S+)|AND|OR)/gi
 	if (where) {
 		// TODO: To extract data
 		if (pattern.test(where)) {
 			// TODO: Process of Extraction
+			const match = where.match(pattern)
+			console.log(match)
 		} else {
 			throw new OrmyxWhereClauseException("Error")
 		}
