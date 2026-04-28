@@ -173,7 +173,7 @@ export function whereClause(data: table_base | json_data, where?: string) {
 			// Since the Query is already in its extracted form, we
 			// need to identify what are in groups and not belong to the group
 			const match = where.match(pattern)
-			console.log(match)
+			return match
 		} else {
 			throw new OrmyxWhereClauseException("Error")
 		}

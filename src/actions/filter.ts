@@ -61,7 +61,21 @@ export default function filter_data(filename: string, key: string, cache: main_s
 		if (opts.where !== undefined) {
 			// TODO: To search with specific data
 			all = false
-			const data = whereClause(cache[table], opts.where)
+			const data: string[] = whereClause(cache[table], opts.where) as string[]
+			let odd = true
+			let operator = "and"
+
+			for (let q of data) {
+				if (odd && q.includes("=")) {
+					// TODO: Gethering/Searching Info
+
+				} else if (!odd && !q.includes("=")) {
+					// TODO: Checking Operators
+
+				}
+				odd = !odd
+			}
+
 		}
 
 		if (all) {
