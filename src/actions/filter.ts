@@ -68,12 +68,11 @@ export default function filter_data(filename: string, key: string, cache: main_s
 			for (let q of data) {
 				if (odd && q.includes("=")) {
 					// TODO: Gethering/Searching Info
-
+					odd = !odd
 				} else if (!odd && !q.includes("=")) {
 					// TODO: Checking Operators
-
+					odd = !odd
 				}
-				odd = !odd
 			}
 
 		}
