@@ -58,9 +58,10 @@ export default function filter_data(filename: string, key: string, cache: main_s
 			opts.limit = values.length
 		}
 
-		if (opts.where !== undefined) {
+		console.log(opts.where)
+
+		if (opts.where !== undefined && opts.where !== "") {
 			// TODO: To search with specific data
-			all = false
 			const data: string[] = whereClause(cache[table], opts.where) as string[]
 			let odd = true
 			let operator = "and"
@@ -75,9 +76,7 @@ export default function filter_data(filename: string, key: string, cache: main_s
 				}
 			}
 
-		}
-
-		if (all) {
+		} else {
 			// TODO: Select All
 			for (let i = opts.start; i < opts.limit; i++) {
 				filteredData.push(values[i])

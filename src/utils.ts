@@ -164,7 +164,15 @@ export function tableValidator(data: string) {
 }
 
 export function whereClause(data: table_base | json_data, where?: string) {
-	const pattern = /(\w+\s*=\s*(?:"[^"]*"|'[^']*'|\S+)|AND|OR)/gi
+	// INFO: This how this pattern works
+	// The "(\w+\s*)" on the first part defines as the key or the column name
+	// The (=|<|>) are the operators while the \sin\s requires space to identify the include
+	// The (?:"[^"]*"|'[^']*'|) gather the value, where the "" a and '' is used to enclose as string
+	// Meanwhile the \S\w+ use to exclude the ) as it is the last bug I encountered in testing
+	// The AND|OR is use o know the operator if it is AND method or OR in condition
+	// The gi stands for global and insensitive, meaning the default system uses "utf-8-encoding-ci"
+
+	const pattern = /(\w+\s*(=|<|>|\sin\s)\s*(?:"[^"]*"|'[^']*'|\S\w+)|AND|OR)/gi
 	if (where) {
 		// TODO: To extract data
 		if (pattern.test(where)) {
