@@ -172,15 +172,17 @@ export function whereClause(data: table_base | json_data, where?: string) {
 	// The AND|OR is use o know the operator if it is AND method or OR in condition
 	// The gi stands for global and insensitive, meaning the default system uses "utf-8-encoding-ci"
 
-	const pattern = /(\w+\s*(=|<|>|\sin\s)\s*(?:"[^"]*"|'[^']*'|\S\w+)|AND|OR)/gi
+	const pattern = /\w+\s*(=|<|>|\sin\s)\s*(?:"[^"]*"|'[^']*'|\S\w*)|(AND|OR)/gi
 	if (where) {
 		// TODO: To extract data
+
 		if (pattern.test(where)) {
 			// TODO: Process of Extraction
 			// FIX: The current problem is the idea of prioritization
 			// Since the Query is already in its extracted form, we
 			// need to identify what are in groups and not belong to the group
 			const match = where.match(pattern)
+			console.log(match)
 			return match
 		} else {
 			throw new OrmyxWhereClauseException("Error")
