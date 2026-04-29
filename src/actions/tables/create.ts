@@ -7,33 +7,40 @@ import { createTableOptions, main_structure, table_struct } from "../../interfac
 import { read, save } from "../../middlewares/data_control";
 import { c, isForbiddenKey, tableValidator } from "../../utils";
 import { RESERVED_COLUMN, RESERVED_TABLE } from "../../reserved";
+import { OrmyxForbiddenTableException, OrmyxTableExistenceException } from "../../exceptions";
 
 export default function createTable(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
 		Object.assign(cache, read(filename, key))
 	}
-	return (table: string, columns: table_struct | string, { autoincrement, unique }: createTableOptions) => {
-
+	return (table: string, columns: table_struct | string, opts?: createTableOptions) => {
 		// TODO: Changing the type structure
+
+		if (!opts) {
+			opts = {
+				autoincrement: true,
+				unique: ""
+			}
+		}
 
 		table = table.toLowerCase()
 
 		if (isForbiddenKey(table)) {
-			throw new Error("Cannot use forbidden key as table name");
+			throw new OrmyxForbiddenTableException("Cannot use forbidden key as table name");
 		}
 
 		const regex = /^[A-Za-z_]+$/
 		if (!regex.test(table)) {
-			throw new Error("Table name only accepts alphabet characters and underscore")
+			throw new OrmyxForbiddenTableException("Table name only accepts alphabet characters and underscore")
 		}
 
 		// TODO: Anti destroy reserve table
 		if (table === RESERVED_TABLE) {
-			throw new Error(`Cannot access reserved table: ${RESERVED_TABLE}`);
+			throw new OrmyxForbiddenTableException(`Cannot access reserved table: ${RESERVED_TABLE}`);
 		}
 
-		if (autoincrement === undefined) {
-			autoincrement = true
+		if (opts?.autoincrement === undefined) {
+			opts.autoincrement = true
 		}
 
 		if (typeof columns === "string") {
@@ -48,7 +55,7 @@ export default function createTable(filename: string, key: string, cache: main_s
 		// TODO: To prevent overwrite of the table
 		if (cache[table] !== undefined) {
 			c("Create Table", "e", "Table is already existed")
-			return
+			throw new OrmyxTableExistenceException("Table is already existed")
 		}
 
 		// TODO: Clearing cache table
@@ -64,8 +71,8 @@ export default function createTable(filename: string, key: string, cache: main_s
 			throw new Error("ID only requires string or number/int datatype")
 		}
 
-		if (unique !== undefined) {
-			columns[RESERVED_COLUMN] = unique
+		if (opts?.unique !== undefined) {
+			columns[RESERVED_COLUMN] = opts?.unique ?? ""
 		}
 
 		cache[RESERVED_TABLE][table] = columns

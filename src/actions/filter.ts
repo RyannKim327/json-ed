@@ -3,9 +3,9 @@
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */
 
-import { data_structure, filterOptions, main_structure } from "../interface";
+import { data_structure, filterOptions, main_structure, table_struct } from "../interface";
 import { read } from "../middlewares/data_control";
-import { isForbiddenKey, stringToJson } from "../utils";
+import { isForbiddenKey, whereClause } from "../utils";
 
 export default function filter_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -13,6 +13,7 @@ export default function filter_data(filename: string, key: string, cache: main_s
 	}
 
 	return (table: string, opts: filterOptions) => {
+		let all = true
 		table = table.toLowerCase();
 		if (isForbiddenKey(table)) {
 			throw new Error("Cannot use forbidden key as table name");
@@ -23,10 +24,6 @@ export default function filter_data(filename: string, key: string, cache: main_s
 				limit: 10,
 				start: 0,
 			}
-		}
-
-		if (typeof opts.query === "string") {
-			opts.query = stringToJson(opts.query)
 		}
 
 		// TODO: This function is good for paginator
@@ -41,7 +38,6 @@ export default function filter_data(filename: string, key: string, cache: main_s
 		}
 
 		let filteredData: data_structure[] = []
-		// const keys = Object.keys(opts?.query ?? {})
 		const values = Object.values(cache[table])
 
 		// TODO: Setup defaults if negative
@@ -62,11 +58,24 @@ export default function filter_data(filename: string, key: string, cache: main_s
 			opts.limit = values.length
 		}
 
-		if (opts.query !== undefined) {
+		console.log(opts.where)
+
+		if (opts.where !== undefined && opts.where !== "") {
 			// TODO: To search with specific data
-			for (let [i, x] = [opts.start, opts.start]; i < opts.limit && x < opts.limit; x++) {
-				i++
+			const data: string[] = whereClause(cache[table], opts.where) as string[]
+			let odd = true
+			let operator = "and"
+
+			for (let q of data) {
+				if (odd && q.includes("=")) {
+					// TODO: Gethering/Searching Info
+					odd = !odd
+				} else if (!odd && !q.includes("=")) {
+					// TODO: Checking Operators
+					odd = !odd
+				}
 			}
+
 		} else {
 			// TODO: Select All
 			for (let i = opts.start; i < opts.limit; i++) {

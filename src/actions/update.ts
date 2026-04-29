@@ -8,6 +8,7 @@ import { read, save } from "../middlewares/data_control";
 import sanitizingData from "../middlewares/sanitize";
 import { c, dataFilter, isForbiddenKey, stringToJson, toLowerCaseKeys } from "../utils";
 import { RESERVED_TABLE } from "../reserved";
+import { OrmyxForbiddenTableException, OrmyxTableExistenceException } from "../exceptions";
 
 export default function update_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -18,16 +19,16 @@ export default function update_data(filename: string, key: string, cache: main_s
 		table = table.toLowerCase()
 
 		if (isForbiddenKey(table) || isForbiddenKey(id)) {
-			throw new Error("Cannot use forbidden key as table name or id");
+			throw new OrmyxForbiddenTableException("Cannot use forbidden key as table name or id");
 		}
 
 		// TODO: To prevent reserved table to access
 		if (table === RESERVED_TABLE) {
-			throw new Error(`Cannot access reserved table: ${RESERVED_TABLE}`);
+			throw new OrmyxForbiddenTableException(`Cannot access reserved table: ${RESERVED_TABLE}`);
 		}
 
 		if (cache[table] === undefined) {
-			throw new Error("No Table Found")
+			throw new OrmyxTableExistenceException("No Table Found")
 		}
 
 		if (typeof (data) === "string") {

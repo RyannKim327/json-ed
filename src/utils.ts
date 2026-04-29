@@ -1,6 +1,7 @@
-import { data_structure, main_structure, table_struct } from "./interface"
+import { data_structure, json_data, main_structure, table_base, table_struct } from "./interface"
 import * as crypto from "crypto"
 import { RESERVED_COLUMN, RESERVED_TABLE } from "./reserved";
+import { OrmyxWhereClauseException } from "./exceptions";
 
 export function isForbiddenKey(key: string | number) {
 	const forbidden = ["__proto__", "constructor", "prototype"]
@@ -159,6 +160,39 @@ export function tableValidator(data: string) {
 			}
 		}
 	}
-
 	return temp
+}
+
+export function whereClause(data: table_base | json_data, where?: string) {
+	// INFO: This how this pattern works
+	// The "(\w+\s*)" on the first part defines as the key or the column name
+	// The (=|<|>) are the operators while the \sin\s requires space to identify the include
+	// The (?:"[^"]*"|'[^']*'|) gather the value, where the "" a and '' is used to enclose as string
+	// Meanwhile the \S\w+ use to exclude the ) as it is the last bug I encountered in testing
+	// The AND|OR is use o know the operator if it is AND method or OR in condition
+	// The gi stands for global and insensitive, meaning the default system uses "utf-8-encoding-ci"
+
+	const pattern = /\w+\s*(=|<|>|\sin\s)\s*(?:"[^"]*"|'[^']*'|\S\w*)|(AND|OR)/gi
+	if (where) {
+		// TODO: To extract data
+
+		if (pattern.test(where)) {
+			// TODO: Process of Extraction
+			// FIX: The current problem is the idea of prioritization
+			// Since the Query is already in its extracted form, we
+			// need to identify what are in groups and not belong to the group
+			const match = where.match(pattern)
+			let x = ""
+			// TODO: I plan to use eval here
+
+			for (let m of match) {
+
+			}
+			console.log(x)
+			return match
+		} else {
+			throw new OrmyxWhereClauseException("Error")
+		}
+	}
+	return data
 }
