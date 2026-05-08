@@ -181,7 +181,7 @@ export function whereClause(data: table_base | json_data, where?: string) {
 			// FIX: The current problem is the idea of prioritization
 			// Since the Query is already in its extracted form, we
 			// need to identify what are in groups and not belong to the group
-			const match = where.match(pattern)
+			const match = where.match(pattern) ?? []
 			let x = ""
 			// TODO: I plan to use eval here
 
