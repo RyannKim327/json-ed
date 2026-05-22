@@ -164,34 +164,19 @@ export function tableValidator(data: string) {
 }
 
 export function whereClause(data: table_base | json_data, where?: string) {
-	// INFO: This how this pattern works
-	// The "(\w+\s*)" on the first part defines as the key or the column name
-	// The (=|<|>) are the operators while the \sin\s requires space to identify the include
-	// The (?:"[^"]*"|'[^']*'|) gather the value, where the "" a and '' is used to enclose as string
-	// Meanwhile the \S\w+ use to exclude the ) as it is the last bug I encountered in testing
-	// The AND|OR is use o know the operator if it is AND method or OR in condition
-	// The gi stands for global and insensitive, meaning the default system uses "utf-8-encoding-ci"
-
-	const pattern = /\w+\s*(=|<|>|\sin\s)\s*(?:"[^"]*"|'[^']*'|\S\w*)|(AND|OR)/gi
+	// INFO: Updated pattern to support more operators and aliases for AND/OR
+	const pattern = /(\w+)\s*(=|<|>|<=|>=|!=|\sin\s)\s*("[^"]*"|'[^']*'|\S+)|(AND|OR|&&|\|\||&|\|)/gi
 	if (where) {
-		// TODO: To extract data
+		const matches: string[] = []
+		let match;
+		while ((match = pattern.exec(where)) !== null) {
+			matches.push(match[0])
+		}
 
-		if (pattern.test(where)) {
-			// TODO: Process of Extraction
-			// FIX: The current problem is the idea of prioritization
-			// Since the Query is already in its extracted form, we
-			// need to identify what are in groups and not belong to the group
-			const match = where.match(pattern) ?? []
-			let x = ""
-			// TODO: I plan to use eval here
-
-			for (let m of match) {
-
-			}
-			console.log(x)
-			return match
+		if (matches.length > 0) {
+			return matches
 		} else {
-			throw new OrmyxWhereClauseException("Error")
+			throw new OrmyxWhereClauseException("Invalid WHERE clause")
 		}
 	}
 	return data

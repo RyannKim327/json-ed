@@ -168,17 +168,36 @@ if (user) {
 ```
 
 ### 5. Filtering Data
-#### `db.filter(tableName: string, query: object | string)`
-Search for data within a table that matches specific criteria.
+#### `db.filter(tableName: string, options: filterOptions)`
+Search for data within a table that matches specific criteria using a `where` clause.
 
 ```typescript
-// Example: db.filter('users', { role: 'admin' })
-const admins = db.filter('users', { role: 'admin' });
-console.log('Admins found:', admins);
+// Example: Basic filtering
+const results = db.filter('users', { 
+    where: "age > 20 AND active = true" 
+});
 
-// Using string format
-const activeUsers = db.filter('users', "active = true");
+// Using logical aliases (&, |, &&, ||)
+const admins = db.filter('users', { 
+    where: "role = admin & active = true" 
+});
+
+// Pagination support
+const pagedResults = db.filter('users', {
+    where: "active = true",
+    start: 0,
+    limit: 10
+});
 ```
+
+**Supported Operators:**
+- **Comparison:** `=`, `!=`, `>`, `<`, `>=`, `<=`, `in`
+- **Logical:** `AND`, `OR`, `&&`, `||`, `&`, `|`
+
+**Rules:**
+- **Logical Operators:** `&` and `&&` act as `AND`. `|` and `||` act as `OR`.
+- **Case Sensitivity:** Operator aliases like `AND`/`OR` are case-insensitive.
+- **Values:** Strings with spaces should be wrapped in quotes (e.g., `name = 'John Doe'`).
 
 ### 6. Updating Data
 #### `db.update(tableName: string, id: string | number, data: object | string)`

@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 
 <!-- NOTE: Only the developer is allowed to change the version number, but suggestions for updates are always welcome. -->
 
-## 2026-04-09
-### [0.0.4-test.1]
-- **feat:** Added `filter` functionality to search data in a table by key-value pairs.
+## 2026-05-22
+### [0.1.0]
+- **feat:** Added `filter` functionality to search data in a table with a robust `where` clause.
+- **feat:** Supported multiple comparison operators in `filter`: `=`, `!=`, `>`, `<`, `>=`, `<=`, and `in`.
+- **feat:** Supported logical and bitwise-style operator aliases in `where` clause: `AND`, `OR`, `&&`, `||`, `&`, and `|`.
 - **feat:** Added `rename` functionality to rename an existing table (structure and data).
+- **fix:** Fixed pagination in `filter` where `limit` now correctly represents the number of items to return.
 - **fix:** Added table name validation to `create` and `rename` to only allow alphabets and underscores.
 - **fix:** Improved cache initialization in `create`, `alter`, `filter`, and `rename` to ensure data is loaded if the cache is empty.
 - **refactor:** Organized the `ormyx` return object into `Data actions` and `Table actions` for better clarity.
