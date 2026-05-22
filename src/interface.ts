@@ -12,7 +12,7 @@ export interface insertOptions {
 export interface filterOptions {
 	limit?: number
 	start?: number
-	query?: data_structure | string
+	where?: string
 }
 
 export interface createTableOptions {

@@ -3,9 +3,9 @@
  * https://github.com/VangBanLaNhat/fca-unofficial/blob/master/src/controllers/sendMessageMqtt.js
  */
 
-import { data_structure, filterOptions, main_structure } from "../interface";
+import { data_structure, filterOptions, main_structure, table_struct } from "../interface";
 import { read } from "../middlewares/data_control";
-import { isForbiddenKey, stringToJson } from "../utils";
+import { isForbiddenKey, parseValue, whereClause } from "../utils";
 
 export default function filter_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -13,6 +13,7 @@ export default function filter_data(filename: string, key: string, cache: main_s
 	}
 
 	return (table: string, opts: filterOptions) => {
+		let all = true
 		table = table.toLowerCase();
 		if (isForbiddenKey(table)) {
 			throw new Error("Cannot use forbidden key as table name");
@@ -23,10 +24,6 @@ export default function filter_data(filename: string, key: string, cache: main_s
 				limit: 10,
 				start: 0,
 			}
-		}
-
-		if (typeof opts.query === "string") {
-			opts.query = stringToJson(opts.query)
 		}
 
 		// TODO: This function is good for paginator
@@ -41,7 +38,6 @@ export default function filter_data(filename: string, key: string, cache: main_s
 		}
 
 		let filteredData: data_structure[] = []
-		// const keys = Object.keys(opts?.query ?? {})
 		const values = Object.values(cache[table])
 
 		// TODO: Setup defaults if negative
@@ -62,18 +58,76 @@ export default function filter_data(filename: string, key: string, cache: main_s
 			opts.limit = values.length
 		}
 
-		if (opts.query !== undefined) {
+		console.log(opts.where)
+
+		if (opts.where !== undefined && opts.where !== "") {
 			// TODO: To search with specific data
-			for (let [i, x] = [opts.start, opts.start]; i < opts.limit && x < opts.limit; x++) {
-				i++
+			const data: string[] = whereClause(cache[table], opts.where) as string[]
+
+			for (const item of values) {
+				let result = true;
+				if (data.length > 0) {
+					result = evaluateCondition(item, data[0]);
+
+					for (let i = 1; i < data.length; i += 2) {
+						const operator = data[i].toUpperCase();
+						const nextCondition = data[i + 1];
+						if (!nextCondition) break;
+
+						const nextResult = evaluateCondition(item, nextCondition);
+
+						if (operator === "AND" || operator === "&&" || operator === "&") {
+							result = result && nextResult;
+						} else if (operator === "OR" || operator === "||" || operator === "|") {
+							result = result || nextResult;
+						}
+					}
+				}
+
+				if (result) {
+					filteredData.push(item);
+				}
 			}
+
+			filteredData = filteredData.slice(opts.start, opts.start + opts.limit);
 		} else {
 			// TODO: Select All
-			for (let i = opts.start; i < opts.limit; i++) {
+			for (let i = opts.start; i < opts.start + opts.limit && i < values.length; i++) {
 				filteredData.push(values[i])
 			}
 		}
 
 		return filteredData
+	}
+}
+
+
+function evaluateCondition(item: data_structure, condition: string): boolean {
+	const pattern = /(\w+)\s*(=|<|>|<=|>=|!=|\sin\s)\s*("[^"]*"|'[^']*'|\S+)/i;
+	const parts = condition.match(pattern);
+	if (!parts) return false;
+
+	const column = parts[1].toLowerCase();
+	const operator = parts[2].toLowerCase();
+	let valueRaw = parts[3].trim();
+
+	if ((valueRaw.startsWith('"') && valueRaw.endsWith('"')) ||
+		(valueRaw.startsWith("'") && valueRaw.endsWith("'"))) {
+		valueRaw = valueRaw.substring(1, valueRaw.length - 1);
+	}
+
+	const itemValue = item[column];
+	const targetValue = parseValue(valueRaw);
+
+	switch (operator) {
+		case "=": return itemValue === targetValue;
+		case "!=": return itemValue !== targetValue;
+		case ">": return (itemValue as any) > (targetValue as any);
+		case "<": return (itemValue as any) < (targetValue as any);
+		case ">=": return (itemValue as any) >= (targetValue as any);
+		case "<=": return (itemValue as any) <= (targetValue as any);
+		case " in ":
+			return String(itemValue).includes(String(targetValue));
+		default: return false;
 	}
 }

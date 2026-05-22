@@ -21,6 +21,7 @@ export default function sanitizingData(table: string, data: data_structure, cach
 			// NOTE: Basic type checking if needed, but for now we just allow what matches
 			// Actually the original code tried to check typeof
 			// But let's just ensure we only keep allowed columns
+
 			sanitized[colLower] = val;
 		}
 	})

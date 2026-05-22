@@ -7,6 +7,7 @@ import { main_structure } from "../../interface";
 import { read, save } from "../../middlewares/data_control";
 import { isForbiddenKey } from "../../utils";
 import { RESERVED_TABLE } from "../../reserved";
+import { OrmyxForbiddenTableException, OrmyxTableExistenceException } from "../../exceptions";
 
 export default function renameTable(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -18,15 +19,15 @@ export default function renameTable(filename: string, key: string, cache: main_s
 		newTable = newTable.toLowerCase()
 
 		if (isForbiddenKey(oldTable) || isForbiddenKey(newTable)) {
-			throw new Error("Cannot use forbidden key as table name");
+			throw new OrmyxForbiddenTableException("Cannot use forbidden key as table name");
 		}
 
 		const regex = /^[A-Za-z_]+$/
 		if (!regex.test(newTable)) {
-			throw new Error("Table name only accepts alphabet characters and underscore")
+			throw new OrmyxForbiddenTableException("Table name only accepts alphabet characters and underscore")
 		}
 		if (!regex.test(oldTable)) {
-			throw new Error("Table name only accepts alphabet characters and underscore")
+			throw new OrmyxForbiddenTableException("Table name only accepts alphabet characters and underscore")
 		}
 
 		if (oldTable === newTable) {
@@ -36,15 +37,15 @@ export default function renameTable(filename: string, key: string, cache: main_s
 		}
 
 		if (newTable === RESERVED_TABLE) {
-			throw new Error("Cannot access reserved table: table_struct");
+			throw new OrmyxForbiddenTableException("Cannot access reserved table: table_struct");
 		}
 
 		if (cache[RESERVED_TABLE][oldTable] === undefined) {
-			throw new Error(`The table ${oldTable} is not found`)
+			throw new OrmyxTableExistenceException(`The table ${oldTable} is not found`)
 		}
 
 		if (cache[oldTable] === undefined) {
-			throw new Error(`The table ${oldTable} is existed, but the data is not existing`)
+			throw new OrmyxTableExistenceException(`The table ${oldTable} is existed, but the data is not existing`)
 		}
 
 		if (cache[RESERVED_TABLE][oldTable] !== undefined && cache[oldTable] !== undefined) {
@@ -58,6 +59,6 @@ export default function renameTable(filename: string, key: string, cache: main_s
 				"message": `Table ${oldTable} is now renamed to ${newTable}`
 			}
 		}
-		throw new Error(`The table ${oldTable} is not existing`)
+		throw new OrmyxTableExistenceException(`The table ${oldTable} is not existing`)
 	}
 }

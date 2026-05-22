@@ -1,6 +1,7 @@
-import { data_structure, main_structure, table_struct } from "./interface"
+import { data_structure, json_data, main_structure, table_base, table_struct } from "./interface"
 import * as crypto from "crypto"
 import { RESERVED_COLUMN, RESERVED_TABLE } from "./reserved";
+import { OrmyxWhereClauseException } from "./exceptions";
 
 export function isForbiddenKey(key: string | number) {
 	const forbidden = ["__proto__", "constructor", "prototype"]
@@ -159,6 +160,24 @@ export function tableValidator(data: string) {
 			}
 		}
 	}
-
 	return temp
+}
+
+export function whereClause(data: table_base | json_data, where?: string) {
+	// INFO: Updated pattern to support more operators and aliases for AND/OR
+	const pattern = /(\w+)\s*(=|<|>|<=|>=|!=|\sin\s)\s*("[^"]*"|'[^']*'|\S+)|(AND|OR|&&|\|\||&|\|)/gi
+	if (where) {
+		const matches: string[] = []
+		let match;
+		while ((match = pattern.exec(where)) !== null) {
+			matches.push(match[0])
+		}
+
+		if (matches.length > 0) {
+			return matches
+		} else {
+			throw new OrmyxWhereClauseException("Invalid WHERE clause")
+		}
+	}
+	return data
 }

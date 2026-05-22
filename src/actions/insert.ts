@@ -7,6 +7,7 @@ import { data_structure, insertOptions, main_structure } from "../interface";
 import { read, save } from "../middlewares/data_control";
 import { dataFilter, idGenerator, isForbiddenKey, stringToJson, toLowerCaseKeys } from "../utils";
 import { RESERVED_TABLE } from "../reserved";
+import { OrmyxForbiddenTableException, OrmyxTableExistenceException } from "../exceptions";
 
 export default function insert_data(filename: string, key: string, cache: main_structure) {
 	if (Object.keys(cache).length === 0) {
@@ -19,12 +20,12 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		table = table.toLowerCase()
 
 		if (isForbiddenKey(table)) {
-			throw new Error("Cannot use forbidden key as table name");
+			throw new OrmyxForbiddenTableException("Cannot use forbidden key as table name");
 		}
 
 		// TODO: To prevent reserved table to access
 		if (table === RESERVED_TABLE) {
-			throw new Error(`Cannot access reserved table: ${RESERVED_TABLE}`);
+			throw new OrmyxForbiddenTableException(`Cannot access reserved table: ${RESERVED_TABLE}`);
 		}
 
 		// TODO: To question the existence of table
@@ -33,7 +34,7 @@ export default function insert_data(filename: string, key: string, cache: main_s
 		// to prevent some non-sql injection
 
 		if (cache[table] === undefined) {
-			throw new Error("Please create a table first before you add data on this table")
+			throw new OrmyxTableExistenceException("Please create a table first before you add data on this table")
 		}
 
 		if (typeof (data) === "string") {

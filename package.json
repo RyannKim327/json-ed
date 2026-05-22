@@ -1,6 +1,6 @@
 {
   "name": "ormyx",
-  "version": "0.0.4-test.1",
+  "version": "0.1.0",
   "description": "A ORM-Based program for making JSON a relational-like database",
   "keywords": [
     "orm",
@@ -29,8 +29,8 @@
     "json-enc-dec": "^0.1.2"
   },
   "devDependencies": {
-    "@types/node": "^25.5.2",
+    "@types/node": "^25.9.1",
     "ts-node": "^10.9.2",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.3"
   }
 }
